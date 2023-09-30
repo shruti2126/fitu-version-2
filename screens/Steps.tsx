@@ -1,14 +1,21 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import StepCard from "../components/StepCard"
-import StepFacts from '../components/StepFacts'
-import StepDataCard from '../components/StepDataCard';
+/** @format */
 
+import React from "react";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import StepCard from "../components/StepCard";
+import StepFacts from "../components/StepFacts";
+import StepDataCard from "../components/StepDataCard";
+import { Route, useNavigation } from "@react-navigation/native";
 
-const Steps = () => {
+type stepsProps = {
+  route: Route<string>;
+  navigation: any;
+};
+
+const Steps: React.FC<stepsProps> = ({ route, navigation }) => {
+  navigation = useNavigation();
   return (
-
-    <ImageBackground source={require('../nature.jpg')} style={styles.image}>
+    <ImageBackground source={require("../nature.jpg")} style={styles.image}>
       <View style={styles.container}>
         {/* <AnimatedBar 
 				    progress={30}
@@ -19,7 +26,7 @@ const Steps = () => {
 					borderRadius={5}/> */}
 
         <StepDataCard />
-        <StepCard />
+        <StepCard goalReducer={[]} />
         <StepFacts />
       </View>
     </ImageBackground>
@@ -28,16 +35,16 @@ const Steps = () => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   image: {
     flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    width: '100%',
-    height: '100%'
+    justifyContent: "center",
+    alignContent: "center",
+    width: "100%",
+    height: "100%",
     //blurRadius: 50
-  }
+  },
 });
 
 export default Steps;

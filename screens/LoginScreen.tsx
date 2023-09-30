@@ -35,23 +35,15 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
 	navigation = useNavigation();
 	const auth = getAuth();
 
-	// useEffect(() => {
-	// 	if(auth.currentUser) {
-	// 		getData().then(async data => {
-	// 			setEmail(data.email)
-	// 			setPassword(data.password)
-	// 		})
-	// 	}
-	// })
-
 	const login = () => {
 		signInWithEmailAndPassword(auth, email, password)
 			.then(async (userCredential) => {
 				// Signed in
 				const user = userCredential.user;
 				getData().then(async (data) => {
+					console.log(data.username)
 					if (data != null) {
-						navigation.navigate('Home', { username: data.username });
+						navigation.navigate('Home', data.username);
 					}
 					else {
 						console.log("i am here because user doesn't exist");

@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, Pressable, Image, FlatList, Button } from 'react-native';
-import { goalReward, Goal, goalData } from '../types/GoalTypes';
-import * as actions from '../actions';
-import { useDispatch } from 'react-redux';
+
 
 type props = {
 	updateGoal: Function;

@@ -9,22 +9,30 @@ type StepCardProps = {
 };
 
 const StepCard: React.FC<StepCardProps> = ({ goalReducer }) => {
-	var displayData = {};
-	let goals = goalReducer[0].data;
+	var displayData: Goal = {
+    index: 0,
+    isMainGoal: false,
+    goalIsSteps: false,
+    title: "",
+    rewards: {
+      coins: 0,
+      jewels: 0,
+    },
+  };
+  let goals = goalReducer[0].data;
 
-	goals.forEach((goal) => {
-		if (goal != null && goal.isMainGoal) {
-			displayData = goal;
-		}
-	});
-
+  goals.forEach((goal) => {
+    if (goal != null && goal.isMainGoal) {
+      displayData = goal;
+    }
+  });
 	console.log('display data = ', displayData);
 
 	return (
 		<View style={styles.container}>
 			<View>
 				<Text style={styles.title}>{goalReducer[0].title}</Text>
-				<Text style={styles.header}> Your Main Goal: </Text>
+				<Text style={styles.header}> Main Goal: </Text>
 				<Text style={styles.item}>{displayData.title}</Text>
 				<Text style={styles.header}> Note-to-self:</Text>
 				<Text style={styles.item}> {displayData.note}</Text>
@@ -77,10 +85,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-const mapStateToProps = (state: any) => {
-	return {
-		goalReducer: state.goalReducer
-	};
-};
+// const export default = (state: any) => {
+// 	return {
+// 		goalReducer: state.goalReducer
+// 	};
+// };
 
-export default connect(mapStateToProps)(StepCard);
+export default StepCard;

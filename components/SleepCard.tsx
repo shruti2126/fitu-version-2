@@ -10,7 +10,16 @@ type SleepCardProps = {
 
 const SleepCard: React.FC<SleepCardProps> = ({ goalReducer }) => {
 
-	var displayData = {}
+	var displayData: Goal = {
+		index: 0,
+		isMainGoal: false,
+		goalIsSteps: false,
+		title: '',
+		rewards: {
+			coins: 0,
+			jewels: 0
+		}
+	}
 	let goals = goalReducer[1].data;
 
 	goals.forEach(goal => {
@@ -26,7 +35,7 @@ const SleepCard: React.FC<SleepCardProps> = ({ goalReducer }) => {
 		<View style={styles.container}>
 			<View>
 				<Text style={styles.title}>{goalReducer[1].title}</Text>
-				<Text style={styles.header}> Your Main Goal: </Text>
+				<Text style={styles.header}> Main Goal: </Text>
 				<Text style={styles.item}>{displayData.title}</Text>
 				<Text style={styles.header}> Note-to-self:</Text>
 				<Text style={styles.item}> {displayData.note}</Text>
@@ -72,10 +81,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-const mapStateToProps = (state: any) => {
-	return {
-		goalReducer: state.goalReducer
-	};
-};
+// const mapStateToProps = (state: any) => {
+// 	return {
+// 		goalReducer: state.goalReducer
+// 	};
+// };
 
-export default connect(mapStateToProps)(SleepCard);
+export default SleepCard;
