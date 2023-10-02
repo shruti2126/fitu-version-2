@@ -290,8 +290,8 @@ const Goals = () => {
 
                   setIsUpdating({ updating: false });
 
-                  //   setGoalStates();
-                  //   setModalVisible(false);
+                    setGoalStates();
+                    setModalVisible(false);
                 }}
               >
                 <Text style={styles.buttonText}>Cancel</Text>
