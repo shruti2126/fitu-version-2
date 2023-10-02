@@ -20,6 +20,8 @@ import ProfileCard from "../components/ProfileCard";
 import RewardsCard from "../components/RewardsCard";
 import LevelsCard from "../components/LevelsCard";
 import { useAppSelector } from "../Hooks/reduxHooks";
+import Sleep from "./Sleep";
+import Steps from "./Steps";
 
 type homeScreenProps = {
   username: string;
@@ -65,16 +67,22 @@ const HomeScreen: React.FC<homeScreenProps> = ({ username, navigation }) => {
           />
 
           <View>
-            <Card
+            {/* <Card
               card_title={"Steps"}
               nav_function={() => navigation.navigate("Steps")}
-              goalReducer={step_goals}
+              goal={step_goals}
             />
             <Card
               card_title={"Sleep"}
               nav_function={() => navigation.navigate("Sleep")}
-              goalReducer={sleep_goals}
-            />
+              goal={sleep_goals}
+            /> */}
+            {step_goals.data.forEach((goal) => (
+              <Steps steps_goal={goal} />
+            ))}
+            {sleep_goals.data.forEach((goal) => (
+              <Sleep sleep_goal={goal} />
+            ))}
           </View>
 
           <TouchableOpacity

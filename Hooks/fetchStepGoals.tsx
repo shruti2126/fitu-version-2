@@ -9,7 +9,7 @@ const db = getFirestore;
 
 let auth = getAuth();
 
-const fetchStepsGoals = async (email: String) => {
+const fetchStepsGoals = async (email: string) => {
 
     const docRef = doc(db, "steps_goals", email);
     const docSnap = await getDoc(docRef);

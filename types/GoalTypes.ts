@@ -27,3 +27,13 @@ export type reducer = {
   state: {};
   action: { type: String; payload: Object };
 };
+
+export type MainGoal = {
+  difficulty: number, 
+  goalIsSteps: BooleanConstructor, 
+  index: number, 
+  isMainGoal: boolean, 
+  note: string, 
+  rewards: goalReward, 
+  title: string
+}

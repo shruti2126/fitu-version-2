@@ -1,12 +1,9 @@
 /** @format */
 
-import React from "react";
+import React  from "react";
 import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import { initializeApp } from "firebase/app";
-import firebaseConfig from "./config/config";
 import getFirestore from "./config/config";
 import MainNavigator from "./Routes/Navigator";
 import { Provider } from "react-redux";

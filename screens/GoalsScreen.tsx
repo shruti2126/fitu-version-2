@@ -23,21 +23,11 @@ import {
   ADD_GOAL,
   DELETE_GOAL,
   UPDATE_GOAL,
+  getAllGoalData,
 } from "../Redux/reducers/goalReducer";
 import { PROGRESS_LEVEL, LEVEL_UP } from "../Redux/reducers/levelsReducer";
 import { INCREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
-
-type goalsScreenProps = {
-  //   goalsData: any;
-  //   inventory: any;
-  //   levels: any;
-  //   ADD_GOAL: Function;
-  //   DELETE_GOAL: Function;
-  //   INCREASE_REWARDS: Function;
-  //   ADD_INVENTORY_ITEM: Function;
-  //   PROGRESS_LEVEL: Function;
-  //   LEVEL_UP: Function;
-};
+import saveGoalsToFirestore from "../Hooks/saveGoalsToFirestore";
 
 const Goals = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -45,7 +35,6 @@ const Goals = () => {
   const [newGoalTitle, setNewGoalTitle] = useState<string>("");
   const [newGoalNote, setNewGoalNote] = useState<string>("");
   const [newGoalDifficulty, setNewGoalDifficulty] = useState<number>(1);
-  const [errorMsg, setErrorMsg] = useState<String>("");
   const [isEnabled, setIsEnabled] = useState<boolean>(false); // isMainGoal attribute
   const [isUpdating, setIsUpdating] = useState<{
     updating: boolean;
@@ -54,8 +43,12 @@ const Goals = () => {
     updating: false,
   });
   const dispatch = useAppDispatch();
-  const goalsData: goalData = useAppSelector((state) => state.goals);
-  const [goals, setGoals] = useState<goalData>(goalsData);
+  let goalsData: goalData = useAppSelector((state) => state.goals);
+
+  useEffect(() => {
+    dispatch(getAllGoalData());
+  }, []);
+
   const setGoalStates = (
     isSteps: boolean = true,
     isSwitchEnabled: boolean = false,
@@ -99,7 +92,6 @@ const Goals = () => {
 
   const toggleSwitch = (): void => {
     if (mainGoalExists() && !isEnabled) {
-      setErrorMsg("A Main Goal already exists in this category!");
       setIsEnabled(false);
       return;
     }
@@ -112,7 +104,7 @@ const Goals = () => {
     }
   };
 
-  const createGoal = (): void => {
+  const createGoal = () => {
     console.log("creating new Goal...");
     let newRewards: goalReward;
     if (isEnabled) {
@@ -140,17 +132,7 @@ const Goals = () => {
         rewards: newRewards,
       };
       dispatch(ADD_GOAL(newGoal));
-      if (newGoal.goalIsSteps) {
-        setGoals([
-          ...goals,
-          { title: goals[0].title, data: goals[0].data.concat(newGoal) },
-        ]);
-      } else {
-        setGoals([
-          ...goals,
-          { title: goals[1].title, data: goals[1].data.concat(newGoal) },
-        ]);
-      }
+
       setModalVisible(false);
     } else {
       setGoalStates(); //reset the states for goals to init values
@@ -270,7 +252,7 @@ const Goals = () => {
                 onValueChange={() => toggleSwitch()}
                 value={isEnabled}
               />
-              <Text style={{ color: "red", fontSize: 10 }}>{errorMsg}</Text>
+              {/* <Text style={{ color: "red", fontSize: 10 }}>{errorMsg}</Text> */}
             </View>
 
             <Text style={styles.modalText}>Title</Text>
@@ -317,10 +299,7 @@ const Goals = () => {
 
               <Pressable
                 style={styles.buttonModalClose}
-                onPress={() => {
-                  isUpdating.updating = false;
-                  createGoal();
-                }}
+                onPress={() => createGoal()}
               >
                 <Text style={styles.buttonText}>Save</Text>
               </Pressable>

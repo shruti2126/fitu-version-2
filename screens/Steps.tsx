@@ -6,14 +6,13 @@ import StepCard from "../components/StepCard";
 import StepFacts from "../components/StepFacts";
 import StepDataCard from "../components/StepDataCard";
 import { Route, useNavigation } from "@react-navigation/native";
+import { Goal } from "../types/GoalTypes";
 
 type stepsProps = {
-  route: Route<string>;
-  navigation: any;
+  steps_goal: Goal;
 };
 
-const Steps: React.FC<stepsProps> = ({ route, navigation }) => {
-  navigation = useNavigation();
+const Steps: React.FC<stepsProps> = ({ steps_goal }) => {
   return (
     <ImageBackground source={require("../nature.jpg")} style={styles.image}>
       <View style={styles.container}>
@@ -26,7 +25,7 @@ const Steps: React.FC<stepsProps> = ({ route, navigation }) => {
 					borderRadius={5}/> */}
 
         <StepDataCard />
-        <StepCard goalReducer={[]} />
+        <StepCard goal={steps_goal} />
         <StepFacts />
       </View>
     </ImageBackground>

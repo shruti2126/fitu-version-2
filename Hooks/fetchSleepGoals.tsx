@@ -9,7 +9,7 @@ const db = getFirestore;
 
 let auth = getAuth();
 
-const fetchSleepGoals = async (email: String) => {
+const fetchSleepGoals = async (email: string) => {
 
     const docRef = doc(db, "sleep_goals", email);
     const docSnap = await getDoc(docRef);
