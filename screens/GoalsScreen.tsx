@@ -206,13 +206,13 @@ const Goals = () => {
           jewels: currentGoal.rewards.jewels,
         })
       );
-    else
-      dispatch(
-        INCREASE_REWARDS({
-          coins: currentGoal.rewards.coins,
-          jewels: 0,
-        })
-      );
+    else console.log("DISPATCHING INCREASE_REWARDS ACTION ");
+    dispatch(
+      INCREASE_REWARDS({
+        coins: currentGoal.rewards.coins,
+        jewels: 0,
+      })
+    );
     dispatch(DELETE_GOAL(currentGoal));
   };
 
@@ -290,8 +290,8 @@ const Goals = () => {
 
                   setIsUpdating({ updating: false });
 
-                    setGoalStates();
-                    setModalVisible(false);
+                  setGoalStates();
+                  setModalVisible(false);
                 }}
               >
                 <Text style={styles.buttonText}>Cancel</Text>

@@ -17,9 +17,9 @@ type registerScreenProps = {
 	navigation: any;
 };
 
-const storeData = async (key: string, value: Object) => {
+const storeData = async (key: string, value: string ) => {
 	try {
-		await AsyncStorage.setItem(key, JSON.stringify(value))
+		await AsyncStorage.setItem(key, value)
 	} catch (e) {
 		// saving error
 		console.log("error saving data")
@@ -47,8 +47,8 @@ const RegisterScreen: React.FC<registerScreenProps> = ({ navigation }) => {
 				setEmail('');
 				setPassword('');
 				setUsername('');
-				const obj = { email: email, username: username, password: password}
-				storeData("userInfo", obj)
+				const obj = {email: email, username: username, password: password}
+				storeData("user", JSON.stringify(obj))
 			})
 			.catch((error) => {
 				alert(error.message);

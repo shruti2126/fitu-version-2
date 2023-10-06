@@ -10,9 +10,10 @@ import { Goal } from "../types/GoalTypes";
 
 type stepsProps = {
   steps_goal: Goal;
+  navigation: any
 };
 
-const Steps: React.FC<stepsProps> = ({ steps_goal }) => {
+const Steps: React.FC<stepsProps> = ({ steps_goal, navigation }) => {
   return (
     <ImageBackground source={require("../nature.jpg")} style={styles.image}>
       <View style={styles.container}>

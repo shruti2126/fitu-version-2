@@ -24,11 +24,12 @@ import Sleep from "./Sleep";
 import Steps from "./Steps";
 
 type homeScreenProps = {
-  username: string;
+  route: any;
   navigation: any;
 };
 
-const HomeScreen: React.FC<homeScreenProps> = ({ username, navigation }) => {
+const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
+  console.log("username is Homescreen = ", route.params);
   navigation = useNavigation();
   const auth = getAuth();
   const signOut = () => {
@@ -53,7 +54,7 @@ const HomeScreen: React.FC<homeScreenProps> = ({ username, navigation }) => {
       <ScrollView>
         <View style={[styles.container, styles.shadow]}>
           <View style={styles.title_header}>
-            <Text style={styles.title}>Welcome {username} !</Text>
+            <Text style={styles.title}>Welcome {route.params} !</Text>
           </View>
 
           <ProfileCard />

@@ -10,26 +10,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import fetchUsername from "../Hooks/fetchUsername";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../App";
 
 type loginScreenProps = {
   navigation: any;
 };
 
-const getData = async () => {
+const getUserFromAsyncStorage = async () => {
   try {
-    const jsonValue = await AsyncStorage.getItem("userInfo");
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
+    const jsonValue = await AsyncStorage.getItem("user");
+    console.log(jsonValue);
+    return jsonValue !== null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     // error reading value
     console.log("there was an error = ", e);
@@ -42,6 +37,18 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
   const [message, setMessage] = useState<string>("");
   navigation = useNavigation();
   const auth = getAuth();
+
+  useEffect(() => {
+    async function directLogin() {
+      await getUserFromAsyncStorage().then((value) => {
+        if (value !== null && value["username"] !== null) {
+          console.log(value["username"])
+          navigation.navigate('Home', value["username"])
+        }
+      });
+    }
+    directLogin();
+  }, []);
 
   const login = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -59,27 +66,12 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
                 );
             });
           }
-          setEmail("");
-          setPassword("");
         }
         setEmail(userCredential.user.email!);
       })
       .catch((error) => {
         alert(error.message);
       });
-    // .then(async (userCredential) => {
-    // 	// Signed in
-    // 	const user = userCredential.user;
-    // 	getData().then(async (data) => {
-    // 		console.log(data.username)
-    // 		if (data != null) {
-    // 			navigation.navigate('Home', data.username);
-    // 		}
-    // 		else {
-    // 			console.log("i am here because user doesn't exist");
-    // 			setMessage("Your account doesn't exist. Please register!");
-    // 		}
-    // 	});
   };
   //https://i.stack.imgur.com/cEz3G.jpg
   //const image = {uri: "Desktop/capstone/fitU/05922414-04D4-47E7-98EF-76C789A404B4.jpeg"};
