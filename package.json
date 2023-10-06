@@ -46,5 +46,5 @@
   "private": true,
   "name": "fitU",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module, commongJS"
 }

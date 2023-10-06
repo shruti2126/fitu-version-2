@@ -18,6 +18,7 @@ const levelSlice = createSlice({
   initialState: initialLevelsState,
   reducers: {
     PROGRESS_LEVEL: (state, action: PayloadAction<Goal>) => {
+      console.log("here!");
       let difficulty = action.payload.difficulty!;
 
       if (difficulty > 4) {

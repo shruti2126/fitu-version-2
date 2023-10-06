@@ -49,6 +49,7 @@ const goalSlice = createSlice({
         state[0].data = state[0].data.filter((goal: Goal) => {
           goal.index !== action.payload.index;
         });
+        deleteGoalFromFirestore(action.payload);
       } else {
         state[1].data = state[1].data.filter((goal: Goal) => {
           goal.index !== action.payload.index;

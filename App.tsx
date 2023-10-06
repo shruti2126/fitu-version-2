@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 
 // Initialize Firebase
-const db = getFirestore;
+export const db = getFirestore;
 
 const stack = createNativeStackNavigator();
 
