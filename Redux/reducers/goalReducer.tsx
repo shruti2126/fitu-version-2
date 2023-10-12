@@ -1,22 +1,14 @@
 /** @format */
 
 import deleteGoalFromFirestore from "../../Hooks/deleteGoalFromFirestore";
-import fetchStepGoals from "../../Hooks/fetchStepGoals";
-import fetchSleepGoals from "../../Hooks/fetchSleepGoals";
 
-import { goalData, Goal, reducer } from "../../types/GoalTypes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  createAction,
-  createAsyncThunk,
-  createReducer,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
-import { getObject, storeObject } from "../../Hooks/asyncStorageHooks";
+import { goalData, Goal } from "../../types/GoalTypes";
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAllGoals } from "../asyncThunkFirestoreQueries.tsx/getAllGoals";
-import saveGoalsToFirestore from "../../Hooks/saveGoalsToFirestore";
 import updateGoalFirestore from "../../Hooks/updateGoalFirestore";
+import addStepsGoal from "../../Hooks/addStepsGoal";
+import addSleepGoal from "../../Hooks/addSleepGoal";
 
 const initialState: goalData = [
   {
@@ -38,10 +30,10 @@ const goalSlice = createSlice({
       if (action.payload.goalIsSteps) {
         state[0].data = [...state[0].data, action.payload];
         console.log("steps = ", state[0].data);
-        saveGoalsToFirestore(state[0].data, "stepsGoals");
+        addStepsGoal(action.payload);
       } else {
         state[1].data = [...state[1].data, action.payload];
-        saveGoalsToFirestore(state[1].data, "sleepGoals");
+        addSleepGoal(action.payload);
       }
     },
     DELETE_GOAL: (state, action: PayloadAction<Goal>) => {
@@ -89,5 +81,3 @@ const goalSlice = createSlice({
 export const { ADD_GOAL, DELETE_GOAL, UPDATE_GOAL } = goalSlice.actions;
 
 export default goalSlice.reducer;
-
-
