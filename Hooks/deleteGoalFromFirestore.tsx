@@ -5,17 +5,21 @@ import { StyleSheet, Text, View } from "react-native";
 import {
   arrayRemove,
   collection,
+  collectionGroup,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
 import { Goal } from "../types/GoalTypes";
 import { getAuth } from "@firebase/auth";
 import getFirestore from "../config/config";
 import { onAuthStateChanged } from "firebase/auth";
+import { sub } from "react-native-reanimated";
 
 const db = getFirestore;
 let auth = getAuth();
@@ -35,18 +39,19 @@ export default async function deleteGoalFromFirestore(
   goal: Goal,
 ) {
   var collectionName = "";
+  let subcollection = ""
   if (goal.goalIsSteps) {
     collectionName = "steps_goals";
+    subcollection = "daily steps goals"
   } else {
     collectionName = "sleep_goals";
+    subcollection = "daily sleep goals"
   }
-  // Query a reference to a subcollection
-  const querySnapshot = await getDocs(
-    collection(db, collectionName, email, "daily steps goals")
-  );
-  querySnapshot.forEach(async (doc) => {
-    if (doc.get("index") === goal.index) {
-      await deleteDoc(doc.ref);
-    }
-  });
+  
+  const q = query(collectionGroup(db, subcollection), where("index", "==", goal.index));
+  const qSnap = await getDocs(q);
+  qSnap.forEach((doc) => {
+    deleteDoc(doc.ref);
+  })
+  
 }

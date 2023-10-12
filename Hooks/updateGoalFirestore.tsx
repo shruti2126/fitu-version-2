@@ -10,8 +10,9 @@ import {
   where,
   query,
   collectionGroup,
+ 
 } from "firebase/firestore";
-import { Goal } from "../types/GoalTypes";
+import { Goal, goalData } from "../types/GoalTypes";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import getFirestore from "../config/config";
 import { goalDataConverter } from "../Redux/firestoreDataConverter";
@@ -42,16 +43,13 @@ const updateGoalFirestore = async (goal: Goal, isSteps: boolean) => {
     collectionName = "sleep_goals";
     subcollection = "daily sleep goals";
   }
-  console.log("Goal passed to update firestore = ", goal);
-  // Query a reference to a subcollection
-
-  const collectionRef = collection(db, collectionName, email, subcollection);
 
   const q = query(
     collectionGroup(db, subcollection),
     where("index", "==", goal.index)
   );
   const querySnapshot = await getDocs(q);
+
   querySnapshot.forEach((doc) => {
     console.log("doc data = ", doc.data());
     setDoc(doc.ref, goal);

@@ -9,7 +9,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { goalDataConverter } from "../firestoreDataConverter";
-
+import { collectionGroup, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../App";
 const auth = getAuth();
 let email: string = "";
 onAuthStateChanged(auth, (user) => {

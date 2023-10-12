@@ -27,7 +27,7 @@ import {
 } from "../Redux/reducers/goalReducer";
 import { PROGRESS_LEVEL, LEVEL_UP } from "../Redux/reducers/levelsReducer";
 import { INCREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
-import saveGoalsToFirestore from "../Hooks/saveGoalsToFirestore";
+
 
 const Goals = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
