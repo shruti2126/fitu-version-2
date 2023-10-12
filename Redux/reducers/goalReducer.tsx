@@ -16,6 +16,7 @@ import {
 import { getObject, storeObject } from "../../Hooks/asyncStorageHooks";
 import { getAllGoals } from "../asyncThunkFirestoreQueries.tsx/getAllGoals";
 import saveGoalsToFirestore from "../../Hooks/saveGoalsToFirestore";
+import updateGoalFirestore from "../../Hooks/updateGoalFirestore";
 
 const initialState: goalData = [
   {
@@ -59,9 +60,17 @@ const goalSlice = createSlice({
     },
     UPDATE_GOAL: (state, action: PayloadAction<Goal>) => {
       if (action.payload.goalIsSteps) {
-        state[0].data = [...state[0].data, action.payload];
+        let goalToUpdate = state[0].data.at(action.payload.index);
+        goalToUpdate = action.payload;
+        console.log("Updated goal = ", goalToUpdate);
+        console.log("steps goals data = ", state[0].data);
+        updateGoalFirestore(action.payload, true);
       } else {
-        state[1].data = [...state[1].data, action.payload];
+        let goalToUpdate = state[1].data.at(action.payload.index);
+        goalToUpdate = action.payload;
+        console.log("Updated goal = ", goalToUpdate);
+        console.log("sleep goals data = ", state[1].data);
+        updateGoalFirestore(action.payload, false);
       }
     },
   },
@@ -72,7 +81,6 @@ const goalSlice = createSlice({
         let goals_data = action.payload;
         state[0].data = goals_data[0].data;
         state[1].data = goals_data[1].data;
-        console.log("state is updated = ", state[0].data + ", ", state[1].data);
       })
       .addCase(getAllGoals.rejected, (state, action) => {});
   },
@@ -82,33 +90,4 @@ export const { ADD_GOAL, DELETE_GOAL, UPDATE_GOAL } = goalSlice.actions;
 
 export default goalSlice.reducer;
 
-// switch (action.type) {
-//   case goalActionTypes.ADD_GOAL:
-//     const newGoal = action.payload;
 
-//     if (newGoal.goalIsSteps) state[0].data.push(newGoal);
-//     else state[1].data.push(newGoal);
-
-//     saveGoalsToFirestore(newGoal);
-//     return state;
-
-//   case goalActionTypes.DELETE_GOAL:
-//     const goalToDelete: Goal = action.payload;
-
-//     deleteGoalFromFirestore(goalToDelete);
-
-//     if (goalToDelete.goalIsSteps)
-//       newState[0].data = state[0].data.filter(
-//         (goal) => goal.index != goalToDelete.index
-//       );
-//     else
-//       newState[1].data = state[1].data.filter(
-//         (goal) => goal.index != goalToDelete.index
-//       );
-
-//     state = newState;
-//     return state;
-
-//   default:
-//     return state;
-// }

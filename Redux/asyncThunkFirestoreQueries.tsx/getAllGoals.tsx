@@ -8,9 +8,10 @@ import { Goal, goalData } from "../../types/GoalTypes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { goalDataConverter } from "../firestoreDataConverter";
 
 const auth = getAuth();
-let email : string = ""
+let email: string = "";
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // User is signed in, see docs for a list of available properties
@@ -23,38 +24,28 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-export const getAllGoals = createAsyncThunk(
-  "goals/getGoals",
-  async () => {
-      const sleep = await fetchSleepGoals(email);
-	  const steps = await fetchStepsGoals(email);
-	  const goalState : goalData = [
-      {
-        title: "Daily Steps Goal",
-        data: [],
-      },
-      {
-        title: "Daily Sleep Goal",
-        data: [],
-      },
-    ];
-      if (steps != undefined) {
-        if (steps?.goals != undefined && steps.goals.length != 0) {
-          steps.goals.forEach((goal: Goal) => {
-            goalState[0].data.push(goal);
-          });
-        }
-      }
+export const getAllGoals = createAsyncThunk("goals/getGoals", async () => {
+  const sleep = await fetchSleepGoals(email);
+  const steps = await fetchStepsGoals(email);
+  const goalState: goalData = [
+    {
+      title: "Daily Steps Goal",
+      data: [],
+    },
+    {
+      title: "Daily Sleep Goal",
+      data: [],
+    },
+  ];
 
-      if (sleep != undefined) {
-        if (sleep?.goals != undefined) {
-          sleep?.goals.forEach((goal: Goal) => {
-            goalState[1].data.push(goal);
-          });
-        }
-	  }
-	  console.log("goals state in getAllGoals = ", goalState)
-   
-    return goalState;
-  }
-);
+  const stepsDocArr = goalDataConverter.fromFirestore(steps);
+  stepsDocArr.forEach((stepsGoal) => {
+    goalState[0].data.push(stepsGoal);
+  });
+  const sleepDocArr = goalDataConverter.fromFirestore(sleep);
+  sleepDocArr.forEach((sleepGoal) => {
+    goalState[1].data.push(sleepGoal);
+  });
+  console.log("Goal state = ", goalState)
+  return goalState;
+});

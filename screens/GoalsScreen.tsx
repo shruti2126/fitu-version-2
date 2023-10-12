@@ -35,12 +35,19 @@ const Goals = () => {
   const [newGoalTitle, setNewGoalTitle] = useState<string>("");
   const [newGoalNote, setNewGoalNote] = useState<string>("");
   const [newGoalDifficulty, setNewGoalDifficulty] = useState<number>(1);
-  const [isEnabled, setIsEnabled] = useState<boolean>(false); // isMainGoal attribute
-  const [isUpdating, setIsUpdating] = useState<{
-    updating: boolean;
-    prevGoal?: Goal; //used to restore the previous goal values while updating a goal
-  }>({
-    updating: false,
+  const [isMainGoal, setIsMainGoal] = useState<boolean>(false); // isMainGoal attribute
+  const [isMainGoalSwitchEnabled, setIsMainGoalSwitchEnabled] =
+    useState<boolean>(false);
+  const [editingGoal, setEditingGoal] = useState<boolean>(false);
+  const [isCreatingGoal, setIsCreatingGoal] = useState<boolean>(false);
+  const [currentGoal, setCurrentGoal] = useState<Goal>({
+    index: -1,
+    isMainGoal: false,
+    goalIsSteps: false,
+    title: "",
+    note: "",
+    difficulty: 0,
+    rewards: { coins: 0, jewels: 0 },
   });
   const dispatch = useAppDispatch();
   let goalsData: goalData = useAppSelector((state) => state.goals);
@@ -49,8 +56,26 @@ const Goals = () => {
     dispatch(getAllGoalData());
   }, []);
 
+  useEffect(() => {
+    if (!modalVisible && editingGoal) {
+      console.log("editing  goal ? ", editingGoal);
+      const newGoal = {
+        ...currentGoal,
+        difficulty: newGoalDifficulty,
+        goalIsSteps: isNewGoalTypeSteps,
+        isMainGoal: isMainGoal,
+        note: newGoalNote,
+        title: newGoalTitle,
+      };
+      console.log("new Goal after update = ", newGoal);
+      dispatch(UPDATE_GOAL(newGoal));
+      setEditingGoal(false);
+    }
+  }, [editingGoal, modalVisible]);
+
   const setGoalStates = (
     isSteps: boolean = true,
+    isMainGoal: boolean = false,
     isSwitchEnabled: boolean = false,
     title: string = "",
     note: string = "",
@@ -64,7 +89,8 @@ const Goals = () => {
       };
     }
     setIsNewGoalTypeSteps(isSteps);
-    setIsEnabled(isSwitchEnabled);
+    setIsMainGoal(isMainGoal);
+    setIsMainGoalSwitchEnabled(isSwitchEnabled);
     setNewGoalTitle(title);
     setNewGoalNote(note);
     setNewGoalDifficulty(difficulty);
@@ -75,14 +101,14 @@ const Goals = () => {
     if (isNewGoalTypeSteps) {
       goalsData[0].data.forEach((goal: Goal) => {
         if (goal.isMainGoal) {
-          alert("Steps main Goal already exists");
+          //alert("Steps main Goal already exists");
           doesExist = true;
         }
       });
     } else {
       goalsData[1].data.forEach((goal: Goal) => {
         if (goal.isMainGoal) {
-          alert("Sleep main Goal already exists");
+          //alert("Sleep main Goal already exists");
           doesExist = true;
         }
       });
@@ -91,23 +117,32 @@ const Goals = () => {
   };
 
   const toggleSwitch = (): void => {
-    if (mainGoalExists() && !isEnabled) {
-      setIsEnabled(false);
+    if (currentGoal.index !== -1) {
+      if (currentGoal.isMainGoal) {
+        setIsMainGoalSwitchEnabled(false);
+        setIsMainGoal(false);
+        return;
+      }
+    }
+    if (mainGoalExists()) {
+      alert("A Main goal already exists in this category");
+      setIsMainGoalSwitchEnabled(false);
+      setIsMainGoal(false);
       return;
     }
-    if (!mainGoalExists() && isEnabled) {
-      setIsEnabled(false);
-      return;
-    } else if (!mainGoalExists()) {
-      setIsEnabled(true);
-      return;
+    if (isMainGoalSwitchEnabled) {
+      setIsMainGoalSwitchEnabled(false);
+      setIsMainGoal(false);
+    } else {
+      setIsMainGoalSwitchEnabled(true);
+      setIsMainGoal(true);
     }
   };
 
   const createGoal = () => {
     console.log("creating new Goal...");
     let newRewards: goalReward;
-    if (isEnabled) {
+    if (isMainGoal) {
       newRewards = {
         coins: 0,
         jewels: newGoalDifficulty,
@@ -118,21 +153,19 @@ const Goals = () => {
         jewels: 0,
       };
     }
-
-    //check is for updating a goal, the cancel will call createGoal with the previous goal values
+    //check is for creating a goal, the cancel will call createGoal with the previous goal values
     //passed as the newGoal argument.  otherwise we will create a goal based on the current states
-    if (!isUpdating.updating) {
+    if (isCreatingGoal) {
       let newGoal: Goal = {
         index: new Date().getTime(),
         goalIsSteps: isNewGoalTypeSteps,
-        isMainGoal: isEnabled,
+        isMainGoal: isMainGoal,
         title: newGoalTitle,
         note: newGoalNote,
         difficulty: newGoalDifficulty,
         rewards: newRewards,
       };
       dispatch(ADD_GOAL(newGoal));
-
       setModalVisible(false);
     } else {
       setGoalStates(); //reset the states for goals to init values
@@ -146,7 +179,6 @@ const Goals = () => {
       currentGoal = goalsData[0].data.find(
         (goal: Goal) => goal.index === index
       );
-      console.log("current steps goal = ", currentGoal);
     } else {
       currentGoal = goalsData[1].data.find(
         (goal: Goal) => goal.index === index
@@ -155,28 +187,26 @@ const Goals = () => {
     return currentGoal!;
   };
 
+  //Editing existing goals
   const updateGoal = (index: number, goalIsSteps: boolean): void => {
+    setModalVisible(true);
     let currentGoal = findGoal(index, goalIsSteps);
+    setCurrentGoal(currentGoal);
+    console.log("current goal = ", currentGoal);
     if (!currentGoal) {
       alert("goal not found");
       return;
     }
-
-    setIsUpdating({
-      updating: true,
-      prevGoal: currentGoal,
-    });
+    //display field values set previously
     setGoalStates(
       currentGoal.goalIsSteps,
+      currentGoal.isMainGoal,
       currentGoal.isMainGoal,
       currentGoal.title,
       currentGoal.note,
       currentGoal.difficulty,
       currentGoal.rewards
     );
-    setModalVisible(true);
-    console.log("hi");
-    dispatch(UPDATE_GOAL(currentGoal));
   };
 
   const deleteGoal = (index: number, goalIsSteps: boolean): void => {
@@ -185,7 +215,6 @@ const Goals = () => {
       alert("goal not found");
       return;
     }
-
     dispatch(DELETE_GOAL(currentGoal));
   };
 
@@ -195,24 +224,23 @@ const Goals = () => {
       alert("goal not found");
       return;
     }
-
-    dispatch(PROGRESS_LEVEL(currentGoal));
-    dispatch(LEVEL_UP());
-
-    if (currentGoal.isMainGoal)
+    dispatch(LEVEL_UP(currentGoal));
+    // dispatch(PROGRESS_LEVEL(currentGoal));
+    if (currentGoal.isMainGoal) {
       dispatch(
         INCREASE_REWARDS({
           coins: 0,
           jewels: currentGoal.rewards.jewels,
         })
       );
-    else console.log("DISPATCHING INCREASE_REWARDS ACTION ");
-    dispatch(
-      INCREASE_REWARDS({
-        coins: currentGoal.rewards.coins,
-        jewels: 0,
-      })
-    );
+    } else {
+      dispatch(
+        INCREASE_REWARDS({
+          coins: currentGoal.rewards.coins,
+          jewels: 0,
+        })
+      );
+    }
     dispatch(DELETE_GOAL(currentGoal));
   };
 
@@ -247,10 +275,10 @@ const Goals = () => {
               <Switch
                 style={styles.mainGoalSwitch}
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
-                thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                thumbColor={isMainGoal ? "#f5dd4b" : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={() => toggleSwitch()}
-                value={isEnabled}
+                value={isMainGoal}
               />
               {/* <Text style={{ color: "red", fontSize: 10 }}>{errorMsg}</Text> */}
             </View>
@@ -284,12 +312,12 @@ const Goals = () => {
               <Pressable
                 style={styles.buttonModalClose}
                 onPress={() => {
-                  console.log(goalsData);
-
-                  console.log(isUpdating);
-
-                  setIsUpdating({ updating: false });
-
+                  if (editingGoal) {
+                    setEditingGoal(false);
+                  }
+                  if (isCreatingGoal) {
+                    setIsCreatingGoal(false);
+                  }
                   setGoalStates();
                   setModalVisible(false);
                 }}
@@ -299,7 +327,14 @@ const Goals = () => {
 
               <Pressable
                 style={styles.buttonModalClose}
-                onPress={() => createGoal()}
+                onPress={() => {
+                  if (isCreatingGoal) {
+                    createGoal();
+                  } else {
+                    setEditingGoal(true); //if not creating goal, then editing
+                  }
+                  setModalVisible(false);
+                }}
               >
                 <Text style={styles.buttonText}>Save</Text>
               </Pressable>
@@ -337,7 +372,10 @@ const Goals = () => {
           margin={10}
           fontSize={20}
           source={{ uri: "./plus.png" }}
-          onPress={() => setModalVisible(!modalVisible)}
+          onPress={() => {
+            setIsCreatingGoal(true);
+            setModalVisible(!modalVisible);
+          }}
         />
       </View>
     </View>

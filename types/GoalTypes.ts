@@ -15,7 +15,7 @@ export type Goal = {
   note?: string;
   difficulty?: number;
   rewards: goalReward;
-  reminder?: Date;
+  // reminder?: Date;
 };
 
 export type goalData = {

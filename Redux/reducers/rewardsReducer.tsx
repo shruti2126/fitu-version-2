@@ -1,6 +1,7 @@
 /** @format */
 
-import { goalReward, Goal } from "../../types/GoalTypes.js";
+import updateRewards from "../../Hooks/updateRewards.tsx";
+import { goalReward, Goal } from "../../types/GoalTypes.ts";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialRewardsState: goalReward = {
@@ -8,7 +9,6 @@ const initialRewardsState: goalReward = {
   jewels: 0,
 };
 
-// const getData = async () => {
 //   try {
 //     const jsonValue = await AsyncStorage.getItem("userInfo");
 //     return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -38,10 +38,12 @@ const rewardsSlice = createSlice({
     INCREASE_REWARDS: (state, action: PayloadAction<goalReward>) => {
       state.coins += action.payload.coins;
       state.jewels += action.payload.jewels;
+      updateRewards(action.payload);
     },
     DECREASE_REWARDS: (state, action: PayloadAction<goalReward>) => {
       state.coins -= action.payload.coins;
       state.jewels -= action.payload.jewels;
+      updateRewards(action.payload);
     },
   },
 });

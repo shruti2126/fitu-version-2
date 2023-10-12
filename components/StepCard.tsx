@@ -15,10 +15,9 @@ import { goalData, Goal } from "../types/GoalTypes";
 
 type StepCardProps = {
   goal: Goal;
-  navigation: any
 };
 
-const StepCard: React.FC<StepCardProps> = ({ goal, navigation }) => {
+const StepCard: React.FC<StepCardProps> = ({ goal }) => {
   // 	var displayData: Goal = {
   //     index: 0,
   //     isMainGoal: false,
@@ -37,7 +36,7 @@ const StepCard: React.FC<StepCardProps> = ({ goal, navigation }) => {
   //     }
   //   });
   // 	console.log('display data = ', displayData);
-
+  console.log("Goal in stepcard = ", goal);
   return (
     <View style={styles.container}>
       <View>

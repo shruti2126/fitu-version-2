@@ -3,7 +3,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Goal } from "../../types/GoalTypes";
 import { level, levelRewards } from "../../types/LevelsType";
-import updateRewards from "../../Hooks/updateRewards";
+import updateLevels from "../../Hooks/updateLevels";
 
 const initialLevelsState: level = {
   currentLevel: 1,
@@ -27,7 +27,14 @@ const levelSlice = createSlice({
         state.experienceToComplete = experienceRemaining;
       }
     },
-    LEVEL_UP: (state) => {
+    LEVEL_UP: (state, action: PayloadAction<Goal>) => {
+      let difficulty = action.payload.difficulty!;
+
+      if (difficulty > 4) {
+        let experienceRemaining =
+          state.experienceToComplete - (difficulty! + 2);
+        state.experienceToComplete = experienceRemaining;
+      }
       if (state.experienceToComplete <= 0) {
         const newLevel: number = state.currentLevel + 1;
         let newRewards: levelRewards;
@@ -45,12 +52,13 @@ const levelSlice = createSlice({
           };
         }
         console.log("Update rewards in firestore...");
-        updateRewards(newRewards);
+
         const levelUP: level = {
           currentLevel: newLevel,
           experienceToComplete: state.currentLevel * 2,
           levelRewards: newRewards,
         };
+        updateLevels(levelUP);
         state = levelUP;
       }
     },

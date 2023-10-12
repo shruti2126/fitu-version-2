@@ -8,6 +8,9 @@ import {
   updateDoc,
   arrayUnion,
   getDoc,
+  getDocFromServer,
+  getDocs,
+  addDoc,
 } from "firebase/firestore";
 import { goalData, Goal } from "../types/GoalTypes";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -30,69 +33,30 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// const saveGoalsToFirestore = async (goalData: goalData) => {
-// console.log("inside saveGoalsToFirestore");
-// goalData.forEach(async (goal) => {
-//   let docName = "";
-//   if (goal.title === "Daily Steps Goal") {
-//     docName = "steps_goals";
-//   } else {
-//     docName = "sleep_goals";
-//   }
-//   const docRef = doc(db, docName, email);
-//   const docSnap = await getDoc(docRef);
-//   console.log("docSnap data = ", docSnap.data());
-//   if (docSnap.exists()) {
-//     console.log("docSnap exists = ", docSnap.get("goals"));
-//     goal.data.forEach(async (goal) => {
-//       await updateDoc(docRef, {
-//         goals: arrayUnion(goal),
-//       });
-//     });
-//   } else {
-//     console.log("goal data = ", goal.data);
-//     await setDoc(docRef, {
-//       goals: goal.data,
-//     });
-//   }
-// });
-// };
 const saveGoalsToFirestore = async (goals: Goal[], title: string) => {
   console.log("inside saveGoalsToFirestore, goals passed in = ", goals);
 
-  // Create an array of promises for Firestore updates
-  const updatePromises: Promise<void>[] = [];
 
-  let docName = "";
+  let collectionName = "";
+  let subcollection = "";
   if (title === "stepsGoals") {
-    docName = "steps_goals";
+    collectionName = "steps_goals";
+    subcollection = "daily steps goals";
   } else {
-    docName = "sleep_goals";
+    collectionName = "sleep_goals";
+    subcollection = "daily sleep goals";
   }
-  const docRef = doc(db, docName, email);
-  goals.forEach((goal) => {
-    // Add the Firestore update promise to the array
-    updatePromises.push(
-      getDoc(docRef).then((docSnap) => {
-        if (docSnap.exists()) {
-          return updateDoc(docRef, {
-            goals: arrayUnion(goal),
-          });
-        } else {
-          return setDoc(docRef, {
-            goals: goal,
-          });
-        }
-      })
-    );
+
+  goals.forEach(async (goal) => {
+    try {
+      const collectionRef = collection(db, collectionName, email, subcollection);
+      const docRef = await addDoc(collectionRef, goal);
+      console.log("Document written with ID: ", docRef.id)
+      console.log("Goals saved to Firestore successfully.");
+    } catch (error) {
+      console.error("Error saving goals to Firestore:", error);
+    }
   });
-  try {
-    // Wait for all Firestore updates to complete
-    await Promise.all(updatePromises);
-    console.log("Goals saved to Firestore successfully.");
-  } catch (error) {
-    console.error("Error saving goals to Firestore:", error);
-  }
 };
 
 export default saveGoalsToFirestore;

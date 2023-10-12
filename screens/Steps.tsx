@@ -9,11 +9,11 @@ import { Route, useNavigation } from "@react-navigation/native";
 import { Goal } from "../types/GoalTypes";
 
 type stepsProps = {
-  steps_goal: Goal;
+  route: any;
   navigation: any
 };
 
-const Steps: React.FC<stepsProps> = ({ steps_goal, navigation }) => {
+const Steps: React.FC<stepsProps> = ({ route, navigation }) => {
   return (
     <ImageBackground source={require("../nature.jpg")} style={styles.image}>
       <View style={styles.container}>
@@ -26,7 +26,8 @@ const Steps: React.FC<stepsProps> = ({ steps_goal, navigation }) => {
 					borderRadius={5}/> */}
 
         <StepDataCard />
-        <StepCard goal={steps_goal} />
+        <StepCard goal={route.params
+        } />
         <StepFacts />
       </View>
     </ImageBackground>

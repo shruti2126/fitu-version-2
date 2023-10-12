@@ -13,22 +13,11 @@ import {
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUserFromAsyncStorage } from "../Hooks/getUserFromAsynStorage";
 import fetchUsername from "../Hooks/fetchUsername";
 
 type loginScreenProps = {
   navigation: any;
-};
-
-const getUserFromAsyncStorage = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem("user");
-    console.log(jsonValue);
-    return jsonValue !== null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    // error reading value
-    console.log("there was an error = ", e);
-  }
 };
 
 const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
@@ -38,40 +27,48 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
   navigation = useNavigation();
   const auth = getAuth();
 
-  useEffect(() => {
-    async function directLogin() {
+  async function directLogin() {
+    await getUserFromAsyncStorage().then((value) => {
+      if (value !== null && value["username"] !== null) {
+        console.log(value["username"]);
+        navigation.navigate("Home", value["username"]);
+      }
+    });
+  }
+
+  const login = async () => {
+    try {
       await getUserFromAsyncStorage().then((value) => {
         if (value !== null && value["username"] !== null) {
-          console.log(value["username"])
-          navigation.navigate('Home', value["username"])
+          console.log(value["username"]);
+          setEmail(value["email"]);
+          setPassword(value["password"]);
+          navigation.navigate("Home", value["username"]);
         }
       });
-    }
-    directLogin();
-  }, []);
-
-  const login = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        let user = userCredential.user;
-        if (user !== undefined) {
-          let userEmail = user.email;
-          if (userEmail !== null) {
-            setEmail(userEmail);
-            await fetchUsername(email).then((username) => {
-              if (username !== null) navigation.navigate("Home", username);
-              else
-                setMessage(
-                  "Sorry! Couldn't find your account. Please try signing in again or register a new account."
-                );
-            });
+    } catch (err) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          let user = userCredential.user;
+          if (user !== undefined) {
+            let userEmail = user.email;
+            if (userEmail !== null) {
+              setEmail(userEmail);
+              await fetchUsername(email).then((username) => {
+                if (username !== null) navigation.navigate("Home", username);
+                else
+                  setMessage(
+                    "Sorry! Couldn't find your account. Please try signing in again or register a new account."
+                  );
+              });
+            }
           }
-        }
-        setEmail(userCredential.user.email!);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+          setEmail(userCredential.user.email!);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
   };
   //https://i.stack.imgur.com/cEz3G.jpg
   //const image = {uri: "Desktop/capstone/fitU/05922414-04D4-47E7-98EF-76C789A404B4.jpeg"};

@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { connect } from "react-redux";
 import fetchStepGoals from "../Hooks/fetchStepGoals";
@@ -11,54 +11,30 @@ import {
   TouchableHighlight,
 } from "react-native-gesture-handler";
 import { Goal, goalData } from "../types/GoalTypes";
+import { getUserFromAsyncStorage } from "../Hooks/getUserFromAsynStorage";
 
 type homeScreenProps = {
-  goalReducer: {title: string, data: Goal[]};
+  goalData: { title: string; data: Goal[] };
   card_title: string;
   nav_function?: () => void;
 };
 
-const getData = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem("userInfo");
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    // error reading value
-    console.log("there was an error = ", e);
-  }
-};
-
 const Card: React.FC<homeScreenProps> = ({
-  goalReducer,
+  goalData,
   card_title,
   nav_function,
 }) => {
-  let display = "";
+  const [display, setDisplay] = useState("");
 
-  if (card_title === "Steps") {
-    goalReducer.data.forEach((goal) => {
+  useEffect(() => {
+    goalData.data.forEach((goal) => {
       if (goal.isMainGoal) {
-        display = goal.title;
-        console.log(display);
+        setDisplay(goal.title);
+      } else {
+        setDisplay("No Main Goals Yet");
       }
     });
-    // getData().then(async data => {
-    // 	const step_goals = await fetchStepGoals(data.email)
-    // 	if(step_goals?.MainGoal.length == 0) setDisplay("No Main Steps Goal Yet")
-    // 	else setDisplay(step_goals?.MainGoal.title)
-    // })
-  } else {
-    goalReducer.data.forEach((goal) => {
-      if (goal.isMainGoal) {
-        display = goal.title;
-      }
-    });
-    // getData().then(async data => {
-    // 	const sleep_goals = await fetchSleepGoals(data.email)
-    // 	if(sleep_goals?.MainGoal.length == 0) setDisplay("No Main Sleep Goal Yet")
-    // 	setDisplay(sleep_goals?.MainGoal.title)
-    // })
-  }
+  }, [display])
 
   return (
     <View style={styles.frame}>

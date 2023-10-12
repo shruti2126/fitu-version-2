@@ -29,7 +29,6 @@ type homeScreenProps = {
 };
 
 const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
-  console.log("username is Homescreen = ", route.params);
   navigation = useNavigation();
   const auth = getAuth();
   const signOut = () => {
@@ -68,22 +67,22 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
           />
 
           <View>
-            {/* <Card
+            <Card
               card_title={"Steps"}
-              nav_function={() => navigation.navigate("Steps")}
-              goal={step_goals}
+              nav_function={() => navigation.navigate("Steps",  {step_goals})}
+              goalData={step_goals}
             />
             <Card
               card_title={"Sleep"}
-              nav_function={() => navigation.navigate("Sleep")}
-              goal={sleep_goals}
-            /> */}
-            {step_goals.data.forEach((goal) => (
+              nav_function={() => navigation.navigate("Sleep", {sleep_goals})}
+              goalData={sleep_goals}
+            />
+            {/* {step_goals.data.forEach((goal) => (
               <Steps steps_goal={goal} />
             ))}
             {sleep_goals.data.forEach((goal) => (
               <Sleep sleep_goal={goal} />
-            ))}
+            ))} */}
           </View>
 
           <TouchableOpacity
