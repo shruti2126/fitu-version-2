@@ -1,7 +1,7 @@
 /** @format */
 
-import updateRewards from "../../Hooks/updateRewards.tsx";
-import { goalReward, Goal } from "../../types/GoalTypes.ts";
+import updateRewards from "../../Hooks/updateRewards";
+import { goalReward, Goal } from "../../types/GoalTypes";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialRewardsState: goalReward = {
@@ -38,12 +38,17 @@ const rewardsSlice = createSlice({
     INCREASE_REWARDS: (state, action: PayloadAction<goalReward>) => {
       state.coins += action.payload.coins;
       state.jewels += action.payload.jewels;
-      updateRewards(action.payload);
+      console.log(
+        "new coins, new jewels = ",
+        state.coins + " , " + state.jewels
+      );
+      let newRewards = {...state}
+      updateRewards(newRewards);
     },
     DECREASE_REWARDS: (state, action: PayloadAction<goalReward>) => {
       state.coins -= action.payload.coins;
       state.jewels -= action.payload.jewels;
-      updateRewards(action.payload);
+      updateRewards(state);
     },
   },
 });

@@ -42,17 +42,15 @@ const levelSlice = createSlice({
           //if newLevel is NOT a multiple of 5, i.e. 1, 2, 3, 4,
           newRewards = {
             coins: 5,
-            jewels: Math.floor(state.currentLevel / 2), //reduce jewels my half
+            jewels: Math.floor(state.currentLevel / 2), 
           };
         } else {
           // if newLevel === 5
           newRewards = {
-            coins: Math.floor(state.currentLevel / 2), //reduce coins by half
+            coins: Math.floor(state.currentLevel / 2),
             jewels: 0, // reset jewels
           };
         }
-        console.log("Update rewards in firestore...");
-
         const levelUP: level = {
           currentLevel: newLevel,
           experienceToComplete: state.currentLevel * 2,

@@ -28,7 +28,6 @@ import {
 import { PROGRESS_LEVEL, LEVEL_UP } from "../Redux/reducers/levelsReducer";
 import { INCREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
 
-
 const Goals = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isNewGoalTypeSteps, setIsNewGoalTypeSteps] = useState<boolean>(true);
@@ -51,7 +50,7 @@ const Goals = () => {
   });
   const dispatch = useAppDispatch();
   let goalsData: goalData = useAppSelector((state) => state.goals);
-
+  let rewardsData: goalReward = useAppSelector((state) => state.rewards);
   useEffect(() => {
     dispatch(getAllGoalData());
   }, []);
@@ -215,7 +214,7 @@ const Goals = () => {
       alert("goal not found");
       return;
     }
-    console.log("deleting current Goal = ", currentGoal)
+    console.log("deleting current Goal = ", currentGoal);
     dispatch(DELETE_GOAL(currentGoal));
   };
 

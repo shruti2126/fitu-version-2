@@ -10,19 +10,13 @@ const db = getFirestore;
 let auth = getAuth();
 
 const updateLevels = async (levels: level) => {
-  console.log("trying to update rewards...");
+  console.log("updating level = ", levels);
   const docRef = doc(db, "levels", auth.currentUser?.email!);
   const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    await updateDoc(docRef, {
-      levels,
-    });
-  } else {
-    await setDoc(docRef, {
-      levels,
-    });
-  }
+  await updateDoc(docRef, {
+    ...levels,
+  });
 };
 
 export default updateLevels;

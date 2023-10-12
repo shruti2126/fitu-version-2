@@ -42,7 +42,6 @@ const goalSlice = createSlice({
         let toDelete = state[0].data.find(
           (goal) => goal.index === action.payload.index
         );
-        console.log("found goal to delete in redux = ", toDelete?.index);
         state[0].data = state[0].data.filter(
           (goal) => goal.index !== toDelete?.index
         );
@@ -51,7 +50,7 @@ const goalSlice = createSlice({
         let toDelete = state[1].data.find(
           (goal) => goal.index === action.payload.index
         );
-        console.log("found goal to delete in redux = ", toDelete?.index);
+
         state[1].data = state[1].data.filter(
           (goal) => goal.index !== toDelete?.index
         );

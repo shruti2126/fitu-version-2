@@ -1,17 +1,17 @@
 /** @format */
 
 import React from "react";
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, Button } from "react-native";
-import { connect } from "react-redux";
-import { levelRewards } from "../types/LevelsType";
+
 
 type RewardsProps = {
   coins?: number;
   jewels?: number;
 };
 
-const rewardsCard: React.FC<levelRewards> = ({ coins, jewels }) => {
+const rewardsCard: React.FC<RewardsProps> = ({ coins, jewels }) => {
+
   const navigation = useNavigation();
 
   return (
