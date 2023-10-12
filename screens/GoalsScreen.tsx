@@ -215,6 +215,7 @@ const Goals = () => {
       alert("goal not found");
       return;
     }
+    console.log("deleting current Goal = ", currentGoal)
     dispatch(DELETE_GOAL(currentGoal));
   };
 

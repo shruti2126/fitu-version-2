@@ -9,6 +9,7 @@ import { getAllGoals } from "../asyncThunkFirestoreQueries.tsx/getAllGoals";
 import updateGoalFirestore from "../../Hooks/updateGoalFirestore";
 import addStepsGoal from "../../Hooks/addStepsGoal";
 import addSleepGoal from "../../Hooks/addSleepGoal";
+import { ActionCodeOperation } from "firebase/auth";
 
 const initialState: goalData = [
   {
@@ -28,25 +29,28 @@ const goalSlice = createSlice({
   reducers: {
     ADD_GOAL: (state, action: PayloadAction<Goal>) => {
       if (action.payload.goalIsSteps) {
-        state[0].data = [...state[0].data, action.payload];
+        state[0].data = [action.payload, ...state[0].data];
         console.log("steps = ", state[0].data);
         addStepsGoal(action.payload);
       } else {
-        state[1].data = [...state[1].data, action.payload];
+        state[1].data = [action.payload, ...state[1].data];
         addSleepGoal(action.payload);
       }
     },
     DELETE_GOAL: (state, action: PayloadAction<Goal>) => {
-      console.log("deleting goal = ", action.payload.title);
       if (action.payload.goalIsSteps) {
-        state[0].data = state[0].data.filter((goal: Goal) => {
-          goal.index !== action.payload.index;
-        });
+       let toDelete = state[0].data.find(
+         (goal) => goal.index === action.payload.index
+       );
+       console.log("found goal to delete in redux = ", toDelete?.index);
+       state[0].data = state[0].data.filter(
+         (goal) => goal.index !== toDelete?.index
+       );
         deleteGoalFromFirestore(action.payload);
       } else {
-        state[1].data = state[1].data.filter((goal: Goal) => {
-          goal.index !== action.payload.index;
-        });
+        let toDelete = state[1].data.find(goal => goal.index === action.payload.index);
+        console.log("found goal to delete in redux = ", toDelete?.index);
+        state[1].data = state[1].data.filter(goal => goal.index !== toDelete?.index)
         deleteGoalFromFirestore(action.payload);
       }
     },
