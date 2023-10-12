@@ -39,33 +39,45 @@ const goalSlice = createSlice({
     },
     DELETE_GOAL: (state, action: PayloadAction<Goal>) => {
       if (action.payload.goalIsSteps) {
-       let toDelete = state[0].data.find(
-         (goal) => goal.index === action.payload.index
-       );
-       console.log("found goal to delete in redux = ", toDelete?.index);
-       state[0].data = state[0].data.filter(
-         (goal) => goal.index !== toDelete?.index
-       );
+        let toDelete = state[0].data.find(
+          (goal) => goal.index === action.payload.index
+        );
+        console.log("found goal to delete in redux = ", toDelete?.index);
+        state[0].data = state[0].data.filter(
+          (goal) => goal.index !== toDelete?.index
+        );
         deleteGoalFromFirestore(action.payload);
       } else {
-        let toDelete = state[1].data.find(goal => goal.index === action.payload.index);
+        let toDelete = state[1].data.find(
+          (goal) => goal.index === action.payload.index
+        );
         console.log("found goal to delete in redux = ", toDelete?.index);
-        state[1].data = state[1].data.filter(goal => goal.index !== toDelete?.index)
+        state[1].data = state[1].data.filter(
+          (goal) => goal.index !== toDelete?.index
+        );
         deleteGoalFromFirestore(action.payload);
       }
     },
     UPDATE_GOAL: (state, action: PayloadAction<Goal>) => {
       if (action.payload.goalIsSteps) {
-        let goalToUpdate = state[0].data.at(action.payload.index);
-        goalToUpdate = action.payload;
-        console.log("Updated goal = ", goalToUpdate);
-        console.log("steps goals data = ", state[0].data);
+        let toUpdate = state[0].data.find(
+          (goal) => goal.index === action.payload.index
+        );
+        state[0].data = state[0].data.toSpliced(
+          state[0].data.findIndex((goal) => goal.index === toUpdate!.index),
+          1,
+          action.payload
+        );
         updateGoalFirestore(action.payload, true);
       } else {
-        let goalToUpdate = state[1].data.at(action.payload.index);
-        goalToUpdate = action.payload;
-        console.log("Updated goal = ", goalToUpdate);
-        console.log("sleep goals data = ", state[1].data);
+        let toUpdate = state[1].data.find(
+          (goal) => goal.index === action.payload.index
+        );
+        state[1].data = state[1].data.toSpliced(
+          state[0].data.findIndex((goal) => goal.index === toUpdate!.index),
+          1,
+          action.payload
+        );
         updateGoalFirestore(action.payload, false);
       }
     },
