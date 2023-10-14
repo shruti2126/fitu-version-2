@@ -18,27 +18,6 @@ type SleepCardProps = {
 };
 
 const SleepCard: React.FC<SleepCardProps> = ({ goal }) => {
-  // var displayData: Goal = {
-  // 	index: 0,
-  // 	isMainGoal: false,
-  // 	goalIsSteps: false,
-  // 	title: '',
-  // 	rewards: {
-  // 		coins: 0,
-  // 		jewels: 0
-  // 	}
-  // }
-  // let goals = goalReducer[1].data;
-
-  // goals.forEach(goal => {
-  // 	if (goal != null && goal.isMainGoal) {
-  // 		displayData = goal
-  // 	}
-
-  // });
-
-  // console.log("display data = ", displayData)
-
   return (
     <View style={styles.container}>
       <View>
@@ -48,7 +27,6 @@ const SleepCard: React.FC<SleepCardProps> = ({ goal }) => {
         ) : (
           <Text style={styles.header}> Goal: </Text>
         )}
-        {/* <Text style={styles.item}>{displayData.title}</Text> */}
         <Text style={styles.header}> Note-to-self:</Text>
         <Text style={styles.item}> {goal.note}</Text>
         <Text style={styles.header}> Difficulty of Goal: </Text>

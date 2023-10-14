@@ -10,33 +10,13 @@ import {
   Text,
   View,
 } from "react-native";
-import { connect } from "react-redux";
-import { goalData, Goal } from "../types/GoalTypes";
+import { Goal } from "../types/GoalTypes";
 
 type StepCardProps = {
   goal: Goal;
 };
 
 const StepCard: React.FC<StepCardProps> = ({ goal }) => {
-  // 	var displayData: Goal = {
-  //     index: 0,
-  //     isMainGoal: false,
-  //     goalIsSteps: false,
-  //     title: "",
-  //     rewards: {
-  //       coins: 0,
-  //       jewels: 0,
-  //     },
-  //   };
-  //   let goals = goalReducer[0].data;
-
-  //   goals.forEach((goal) => {
-  //     if (goal != null && goal.isMainGoal) {
-  //       displayData = goal;
-  //     }
-  //   });
-  // 	console.log('display data = ', displayData);
-  console.log("Goal in stepcard = ", goal);
   return (
     <View style={styles.container}>
       <View>
@@ -47,7 +27,6 @@ const StepCard: React.FC<StepCardProps> = ({ goal }) => {
           ) : (
             <Text style={styles.header}> Goal: </Text>
           )}
-          {/* <Text style={styles.item}>{displayData.title}</Text> */}
           <Text style={styles.header}> Note-to-self:</Text>
           <Text style={styles.item}> {goal.note}</Text>
           <Text style={styles.header}> Difficulty of Goal: </Text>
@@ -99,11 +78,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
-
-// const export default = (state: any) => {
-// 	return {
-// 		goalReducer: state.goalReducer
-// 	};
-// };
 
 export default StepCard;

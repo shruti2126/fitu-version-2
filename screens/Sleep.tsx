@@ -9,24 +9,20 @@ import { Goal } from "../types/GoalTypes";
 // import AnimatedBar from "react-native-animated-bar"
 
 type sleepProps = {
-  sleep_goal: Goal;
+  route: any;
 };
-const Sleep: React.FC<sleepProps> = ({ sleep_goal }) => {
+const Sleep: React.FC<sleepProps> = ({ route }) => {
+  const goals = route.params.goals;
   return (
     <ImageBackground
-      source={require("../Better_sleep.png")}
+      source={require("../assets/Better_sleep.png")}
       style={styles.image}
     >
       <View style={styles.container}>
-        {/* <AnimatedBar 
-				    progress={30}
-					height={50}
-					borderColor="#DDD"
-					fillColor="tomato"
-					barColor="red"
-					borderRadius={5}/> */}
         <SleepDataCard />
-        <SleepCard goal={sleep_goal} />
+        {goals.map((goal: Goal) => {
+          <SleepCard goal={goal} />;
+        })}
         <SleepFacts />
       </View>
     </ImageBackground>

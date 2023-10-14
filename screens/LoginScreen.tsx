@@ -27,26 +27,17 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
   navigation = useNavigation();
   const auth = getAuth();
 
-  async function directLogin() {
-    await getUserFromAsyncStorage().then((value) => {
-      if (value !== null && value["username"] !== null) {
-        console.log(value["username"]);
-        navigation.navigate("Home", value["username"]);
-      }
-    });
-  }
-
   const login = async () => {
-    try {
-      await getUserFromAsyncStorage().then((value) => {
-        if (value !== null && value["username"] !== null) {
-          console.log(value["username"]);
-          setEmail(value["email"]);
-          setPassword(value["password"]);
-          navigation.navigate("Home", value["username"]);
-        }
-      });
-    } catch (err) {
+    // try {
+    //   await getUserFromAsyncStorage().then((value) => {
+    //     if (value !== null && value["username"] !== null) {
+    //       console.log(value["username"]);
+    //       setEmail(value["email"]);
+    //       setPassword(value["password"]);
+    //       navigation.navigate("Home", value["username"]);
+    //     }
+    //   });
+    // } catch (err) {
       signInWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           let user = userCredential.user;
@@ -68,7 +59,7 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
         .catch((error) => {
           alert(error.message);
         });
-    }
+    // }
   };
   //https://i.stack.imgur.com/cEz3G.jpg
   //const image = {uri: "Desktop/capstone/fitU/05922414-04D4-47E7-98EF-76C789A404B4.jpeg"};

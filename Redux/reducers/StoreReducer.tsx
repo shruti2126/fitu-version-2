@@ -6,33 +6,6 @@ import { Store, StoreItem } from "../../types/StoreTypes";
 import { useAppSelector } from "../../Hooks/reduxHooks";
 
 const initialStoreState: Store = [
-  // {
-  // 	id: 1,
-  // 	name: 'Short Sword',
-  // 	description: 'Slice through your goals! +2 coins for each goal completed until end of the week',
-  // 	coins: 10,
-  // 	jewels: 0,
-  // 	isBought: false,
-  // 	isActive: false,
-  // 	effect: {
-  // 		type: 'increaseRewards',
-  // 		effect: (rewardAmount: number) => rewardAmount + 2
-  // 	}
-  // },
-  // {
-  // 	id: 2,
-  // 	name: 'Anti-Procrastination Sheild',
-  // 	description:
-  // 		'This strong steel shield will help you block distractions when they approach! +5 Jewels for the next goal completed',
-  // 	coins: 5,
-  // 	jewels: 0,
-  // 	isBought: false,
-  // 	isActive: false,
-  // 	effect: {
-  // 		type: 'singleUseIncreaseRewards',
-  // 		effect: (jewels: number) => jewels + 5
-  // 	}
-  // },
   {
     id: 1,
     name: "Fresh Made Coffee",

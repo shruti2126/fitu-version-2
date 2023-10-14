@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -8,13 +8,10 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  TouchableHighlight,
 } from "react-native";
 import { getAuth } from "firebase/auth";
-import {
-  NavigationRouteContext,
-  useNavigation,
-  Route,
-} from "@react-navigation/core";
+
 import Card from "../components/Card";
 import ProfileCard from "../components/ProfileCard";
 import RewardsCard from "../components/RewardsCard";
@@ -22,6 +19,8 @@ import LevelsCard from "../components/LevelsCard";
 import { useAppSelector } from "../Hooks/reduxHooks";
 import Sleep from "./Sleep";
 import Steps from "./Steps";
+import { Goal, goalData, goalReward } from "../types/GoalTypes";
+import { level } from "../types/LevelsType";
 
 type homeScreenProps = {
   route: any;
@@ -29,7 +28,6 @@ type homeScreenProps = {
 };
 
 const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
-  navigation = useNavigation();
   const auth = getAuth();
   const signOut = () => {
     auth.signOut().then(() => {
@@ -37,14 +35,17 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
     });
   };
 
-  const step_goals = useAppSelector(
-    (state) => state.goals.find((goal) => goal.title === "Daily Steps Goal")!
+  let steps_goals: Goal[] = useAppSelector(
+    (state) =>
+      state.goals.find((goal) => goal.title === "Daily Steps Goal")!.data
   );
-  const sleep_goals = useAppSelector(
-    (state) => state.goals.find((goal) => goal.title === "Daily Sleep Goal")!
+  let sleep_goals: Goal[] = useAppSelector(
+    (state) =>
+      state.goals.find((goal) => goal.title === "Daily Sleep Goal")!.data
   );
-  const levels_data = useAppSelector((state) => state.levels);
-  const rewards_data = useAppSelector((state) => state.rewards);
+  let levels_data: level = useAppSelector((state) => state.levels);
+  let rewards_data: goalReward = useAppSelector((state) => state.rewards);
+
   return (
     <ImageBackground
       source={require("../LoginBackground.jpeg")}
@@ -65,37 +66,19 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
             coins={rewards_data.coins}
             jewels={rewards_data.jewels}
           />
-
-          <View>
-            <Card
-              card_title={"Steps"}
-              nav_function={() => navigation.navigate("Steps",  {step_goals})}
-              goalData={step_goals}
-            />
-            <Card
-              card_title={"Sleep"}
-              nav_function={() => navigation.navigate("Sleep", {sleep_goals})}
-              goalData={sleep_goals}
-            />
-            {/* {step_goals.data.forEach((goal) => (
-              <Steps steps_goal={goal} />
-            ))}
-            {sleep_goals.data.forEach((goal) => (
-              <Sleep sleep_goal={goal} />
-            ))} */}
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Stats")}
-            style={styles.StatsButton}
-          >
-            <Text style={styles.buttonText}>GO TO STATS</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={signOut} style={styles.button}>
-            <Text style={styles.buttonText}>Sign out</Text>
-          </TouchableOpacity>
         </View>
+        <Card card_title={"Steps"} goals={steps_goals} />
+        <Card card_title={"Sleep"} goals={sleep_goals} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Stats")}
+          style={styles.StatsButton}
+        >
+          <Text style={styles.buttonText}>GO TO STATS</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={signOut} style={styles.button}>
+          <Text style={styles.buttonText}>Sign out</Text>
+        </TouchableOpacity>
       </ScrollView>
     </ImageBackground>
   );
@@ -169,12 +152,4 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  //   shadow: {
-  //     shadowOffset: {
-  //       width: 5,
-  //       height: 8,
-  //     },
-  //     shadowOpacity: 0.1,
-  //     shadowRadius: 5,
-  //   },
 });

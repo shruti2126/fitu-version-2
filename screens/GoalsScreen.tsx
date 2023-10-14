@@ -26,7 +26,10 @@ import {
   getAllGoalData,
 } from "../Redux/reducers/goalReducer";
 import { PROGRESS_LEVEL, LEVEL_UP } from "../Redux/reducers/levelsReducer";
-import { INCREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
+import {
+  DECREASE_REWARDS,
+  INCREASE_REWARDS,
+} from "../Redux/reducers/rewardsReducer";
 
 const Goals = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -68,6 +71,7 @@ const Goals = () => {
       };
       console.log("new Goal after update = ", newGoal);
       dispatch(UPDATE_GOAL(newGoal));
+      dispatch(INCREASE_REWARDS(newGoal.rewards));
       setEditingGoal(false);
     }
   }, [editingGoal, modalVisible]);
@@ -152,6 +156,7 @@ const Goals = () => {
         jewels: 0,
       };
     }
+
     //check is for creating a goal, the cancel will call createGoal with the previous goal values
     //passed as the newGoal argument.  otherwise we will create a goal based on the current states
     if (isCreatingGoal) {
@@ -165,6 +170,7 @@ const Goals = () => {
         rewards: newRewards,
       };
       dispatch(ADD_GOAL(newGoal));
+      dispatch(INCREASE_REWARDS(newRewards));
       setModalVisible(false);
     } else {
       setGoalStates(); //reset the states for goals to init values
@@ -216,6 +222,20 @@ const Goals = () => {
     }
     console.log("deleting current Goal = ", currentGoal);
     dispatch(DELETE_GOAL(currentGoal));
+    let newRewards: goalReward;
+    if (isMainGoal) {
+      newRewards = {
+        coins: 0,
+        jewels: newGoalDifficulty,
+      };
+      dispatch(DECREASE_REWARDS(newRewards));
+    } else {
+      newRewards = {
+        coins: newGoalDifficulty * 2,
+        jewels: 0,
+      };
+    }
+    dispatch(DECREASE_REWARDS(newRewards));
   };
 
   const completeGoal = (index: number, goalIsSteps: boolean): void => {
@@ -225,7 +245,6 @@ const Goals = () => {
       return;
     }
     dispatch(LEVEL_UP(currentGoal));
-    // dispatch(PROGRESS_LEVEL(currentGoal));
     if (currentGoal.isMainGoal) {
       dispatch(
         INCREASE_REWARDS({
@@ -475,29 +494,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// const export default = (state: any) => {
-//   return {
-//     goalsData: state.goalReducer,
-//     inventory: state.inventoryReducer,
-//     levels: state.levelsReducer,
-//   };
-// };
-
-// const mapDispatchToProps = (dispatch: any) => {
-//   return {
-//     ADD_GOAL: (newGoal: Goal) => dispatch(actions.ADD_GOAL(newGoal)),
-//     DELETE_GOAL: (currentGoal: Goal) =>
-//       dispatch(actions.DELETE_GOAL(currentGoal)),
-//     INCREASE_REWARDS: (rewards: {
-//       rewardType: string;
-//       amount: number;
-//       effect: ItemEffect;
-//     }) => dispatch(actions.INCREASE_REWARDS(rewards)),
-//     ADD_INVENTORY_ITEM: (item: StoreItem) => dispatch(actions.ADD_ITEM(item)),
-//     PROGRESS_LEVEL: (goal: Goal) => dispatch(actions.PROGRESS_LEVEL(goal)),
-//     LEVEL_UP: () => dispatch(actions.LEVEL_UP()),
-//   };
-// };
-
-// export default connect(export default, mapDispatchToProps)(Goals);
 export default Goals;

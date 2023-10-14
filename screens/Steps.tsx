@@ -10,24 +10,18 @@ import { Goal } from "../types/GoalTypes";
 
 type stepsProps = {
   route: any;
-  navigation: any
+  navigation: any;
 };
 
 const Steps: React.FC<stepsProps> = ({ route, navigation }) => {
+  const goals = route.params.goals;
   return (
     <ImageBackground source={require("../nature.jpg")} style={styles.image}>
       <View style={styles.container}>
-        {/* <AnimatedBar 
-				    progress={30}
-					height={50}
-					borderColor="#DDD"
-					fillColor="tomato"
-					barColor="red"
-					borderRadius={5}/> */}
-
         <StepDataCard />
-        <StepCard goal={route.params
-        } />
+        {goals.map((goal: Goal) => {
+          <StepCard goal={goal} />;
+        })}
         <StepFacts />
       </View>
     </ImageBackground>

@@ -2,64 +2,46 @@
 
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
-import { connect } from "react-redux";
-import fetchStepGoals from "../Hooks/fetchStepGoals";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import fetchSleepGoals from "../Hooks/fetchSleepGoals";
-import {
-  BorderlessButton,
-  TouchableHighlight,
-} from "react-native-gesture-handler";
+
 import { Goal, goalData } from "../types/GoalTypes";
 import { getUserFromAsyncStorage } from "../Hooks/getUserFromAsynStorage";
+import { useNavigation } from "@react-navigation/core";
+import { Button } from "react-native-elements";
 
-type homeScreenProps = {
-  goalData: { title: string; data: Goal[] };
+type cardProps = {
+  goals: Goal[];
   card_title: string;
-  nav_function?: () => void;
 };
 
-const Card: React.FC<homeScreenProps> = ({
-  goalData,
-  card_title,
-  nav_function,
-}) => {
+const Card: React.FC<cardProps> = ({ goals, card_title }) => {
   const [display, setDisplay] = useState("");
 
+  const navigation = useNavigation();
   useEffect(() => {
-    goalData.data.forEach((goal) => {
+    goals.forEach((goal) => {
       if (goal.isMainGoal) {
         setDisplay(goal.title);
       } else {
         setDisplay("No Main Goals Yet");
       }
     });
-  }, [display])
+  }, []);
 
   return (
     <View style={styles.frame}>
       <View style={styles.header}>
         <Text style={styles.heading}>Go to {card_title} Sector</Text>
       </View>
-      <TouchableHighlight
+      <Button
         activeOpacity={0.6}
-        underlayColor="#FFFFA7"
-        onPress={nav_function}
+        onPress={() => navigation.navigate(card_title, goals)}
       >
-        {/* <View style={styles.container}> */}
-        {/* <View style={styles.header}>
-						<Text style={styles.text_title}>{card_title}</Text>
-					</View> */}
         <View style={styles.container}>
           <Text style={styles.title}>
             Main Goal: <Text style={styles.text_title}>{display}</Text>
           </Text>
         </View>
-        {/* <View style={styles.body}>
-						<Text style={styles.text_body}>Progress:</Text>
-					</View> */}
-        {/* </View> */}
-      </TouchableHighlight>
+      </Button>
     </View>
   );
 };
