@@ -2,16 +2,19 @@
 
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
+import { Store } from "../types/StoreTypes";
 
 
 type RewardsProps = {
+  store: Store
   coins?: number;
   jewels?: number;
   navigation: any
 };
 
-const rewardsCard: React.FC<RewardsProps> = ({ coins, jewels, navigation }) => {
-
+const rewardsCard: React.FC<RewardsProps> = ({ store, coins, jewels, navigation }) => {
+  console.log('is store data coming into Rewards Card = ', store);
+  let rewards = {coins: coins, jewels: jewels}
   return (
     <View style={styles.container}>
       <Text style={styles.textTitle}>Rewards</Text>
@@ -21,7 +24,7 @@ const rewardsCard: React.FC<RewardsProps> = ({ coins, jewels, navigation }) => {
       <View style={styles.storeButton}>
         <Button
           title="Visit Store"
-          onPress={() => navigation.navigate("Store")}
+          onPress={() => navigation.navigate("Store", { store, rewards })}
           color="##e1ad01"
         />
         {/* <Button title="Visit Store" onPress={() => navigation.navigate('Shop')} color="#f194ff" /> */}

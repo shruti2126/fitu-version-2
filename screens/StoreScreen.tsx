@@ -4,29 +4,27 @@ import React, { Dispatch, useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 
 import ItemCard from "../components/itemCard";
-import { StoreItem } from "../types/StoreTypes";
+import { Store, StoreItem } from "../types/StoreTypes";
 import ShopBanner from "../components/ShopScreenBanner";
 import ShopComp1 from "../components/ShopComp1";
 import ShopComp2 from "../components/ShopComp2";
 import ShopComp4 from "../components/ShopComp4";
 import { useAppDispatch, useAppSelector } from "../Hooks/reduxHooks";
-import { BUY_ITEM } from "../Redux/reducers/StoreReducer";
+import { BUY_ITEM, ADD_ITEM, fetchStore } from "../Redux/reducers/StoreReducer";
 import { DECREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
-import { ADD_ITEM } from "../Redux/reducers/inventoryReducer";
 
 type storeScreenProps = {
-  navigation: any
+  route: any;
+  navigation: any;
 };
 
-const StoreScreen: React.FC<storeScreenProps> = ({navigation}) => {
-  const store = useAppSelector(state => state.store);
-  const rewards = useAppSelector(state => state.rewards);
+const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
+  console.log("store in route.params = ", route.params)
+  const { store, rewards } = route.params;
+  
   const dispatch = useAppDispatch();
   const buyItem = (itemToBuy: StoreItem) => {
-    if (
-      rewards.coins < itemToBuy.coins &&
-      rewards.jewels < itemToBuy.jewels
-    ) {
+    if (rewards.coins < itemToBuy.coins && rewards.jewels < itemToBuy.jewels) {
       alert("Not enough coins and Jewels");
       return;
     } else if (rewards.coins < itemToBuy.coins) {
@@ -78,9 +76,7 @@ const StoreScreen: React.FC<storeScreenProps> = ({navigation}) => {
             >
               Coins: {rewards.coins}
             </Text>
-            <Text style={styles.rewardsText}>
-              Jewels: {rewards.jewels}
-            </Text>
+            <Text style={styles.rewardsText}>Jewels: {rewards.jewels}</Text>
           </View>
         </View>
         <View style={{ backgroundColor: "#F0FFFF" }}>
@@ -141,21 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// const export default = (state: any): {} => {
-//   return {
-//     storeReducer: state.storeReducer,
-//     rewardsReducer: state.rewardsReducer,
-//   };
-// };
-
-// const mapDispatchToProps = (dispatch: any): {} => {
-//   return {
-//     BUY_ITEM: (item: StoreItem) => dispatch(actions.BUY_ITEM(item)),
-//     ADD_INVENTORY_ITEM: (item: StoreItem) => dispatch(actions.ADD_ITEM(item)),
-//     DECREASE_REWARD: (item: StoreItem) =>
-//       dispatch(actions.DECREASE_REWARDS(item)),
-//   };
-// };
-
-// export default connect(export default, mapDispatchToProps)(StoreScreen);
 export default StoreScreen;

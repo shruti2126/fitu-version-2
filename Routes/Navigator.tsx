@@ -14,7 +14,7 @@ import ShopScreen from "../screens/ShopScreen";
 import Stats from "../screens/StatsScreen";
 import CorrelationSleep from "../screens/CorrelationSleep";
 import CorrelationStep from "../screens/CorrelationStep";
-import StoreScreen from "../screens/newStoreScreen";
+import StoreScreen from "../screens/StoreScreen";
 import StepCard from "../components/StepCard";
 
 const MainStack = createStackNavigator();

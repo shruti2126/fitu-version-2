@@ -1,25 +1,28 @@
 /** @format */
 
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import {
+  arrayRemove,
+  collection,
+  collectionGroup,
+  deleteDoc,
   doc,
-  updateDoc,
   getDoc,
   getDocs,
-  collection,
-  setDoc,
-  where,
   query,
-  collectionGroup,
- 
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { Goal, goalData } from "../types/GoalTypes";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import getFirestore from "../config/config";
-import { goalDataConverter } from "../Redux/firestoreDataConverter";
+
+import { Goal } from "../../../types/GoalTypes";
+import { getAuth } from "@firebase/auth";
+import getFirestore from "../../config/config";
+import { onAuthStateChanged } from "firebase/auth";
+import { sub } from "react-native-reanimated";
 
 const db = getFirestore;
-
-const auth = getAuth();
+let auth = getAuth();
 let email: string = "";
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -32,11 +35,10 @@ onAuthStateChanged(auth, (user) => {
     // ...
   }
 });
-
-const updateGoalFirestore = async (goal: Goal, isSteps: boolean) => {
-  let collectionName = "";
+export default async function deleteGoalFromFirestore(goal: Goal) {
+  var collectionName = "";
   let subcollection = "";
-  if (isSteps) {
+  if (goal.goalIsSteps) {
     collectionName = "steps_goals";
     subcollection = "daily steps goals";
   } else {
@@ -48,12 +50,8 @@ const updateGoalFirestore = async (goal: Goal, isSteps: boolean) => {
     collectionGroup(db, subcollection),
     where("index", "==", goal.index)
   );
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    console.log("doc data = ", doc.data());
-    setDoc(doc.ref, goal);
+  const qSnap = await getDocs(q);
+  qSnap.forEach((doc) => {
+    deleteDoc(doc.ref);
   });
-};
-
-export default updateGoalFirestore;
+}

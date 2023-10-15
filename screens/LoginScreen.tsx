@@ -14,7 +14,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getUserFromAsyncStorage } from "../Hooks/getUserFromAsynStorage";
-import fetchUsername from "../Hooks/fetchUsername";
+import fetchUsername from "../db/queries/auth/fetchUsername";
 
 type loginScreenProps = {
   navigation: any;
@@ -38,30 +38,29 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
     //     }
     //   });
     // } catch (err) {
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then(async (userCredential) => {
-    //     let user = userCredential.user;
-    //     if (user !== undefined) {
-    //       let userEmail = user.email;
-    //       if (userEmail !== null) {
-    //         setEmail(userEmail);
-    //         await fetchUsername(email).then((username) => {
-    //           if (username !== null) navigation.navigate("Home", username);
-    //           else
-    //             setMessage(
-    //               "Sorry! Couldn't find your account. Please try signing in again or register a new account."
-    //             );
-    //         });
-    //       }
-    //     }
-    //     setEmail(userCredential.user.email!);
-    //   })
-    //   .catch((error) => {
-    //     alert(error.message);
-    //   });
-    // }
-    navigation.navigate("Home", "username");
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        let user = userCredential.user;
+        if (user !== undefined) {
+          let userEmail = user.email;
+          if (userEmail !== null) {
+            setEmail(userEmail);
+            await fetchUsername(email).then((username) => {
+              if (username !== null) navigation.navigate("Home", username);
+              else
+                setMessage(
+                  "Sorry! Couldn't find your account. Please try signing in again or register a new account."
+                );
+            });
+          }
+        }
+        setEmail(userCredential.user.email!);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
+
   //https://i.stack.imgur.com/cEz3G.jpg
   //const image = {uri: "Desktop/capstone/fitU/05922414-04D4-47E7-98EF-76C789A404B4.jpeg"};
   return (

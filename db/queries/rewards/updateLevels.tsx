@@ -2,8 +2,8 @@
 
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { getAuth } from "@firebase/auth";
-import getFirestore from "../config/config";
-import { level } from "../types/LevelsType";
+import getFirestore from "../../config/config";
+import { level } from "../../../types/LevelsType";
 
 const db = getFirestore;
 

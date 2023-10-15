@@ -21,6 +21,7 @@ type sleepProps = {
 };
 const Sleep: React.FC<sleepProps> = ({ route }) => {
   const goals = route.params;
+  console.log("sleep goals in Sleep screen = ", goals);
   return (
     <ImageBackground
       source={require("../assets/Better_sleep.png")}

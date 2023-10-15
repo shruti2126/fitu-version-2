@@ -1,14 +1,14 @@
 /** @format */
 
-import deleteGoalFromFirestore from "../../Hooks/deleteGoalFromFirestore";
+import deleteGoalFromFirestore from "../../db/queries/goals/deleteGoal";
 
 import { goalData, Goal } from "../../types/GoalTypes";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAllGoals } from "../asyncThunkFirestoreQueries.tsx/getAllGoals";
-import updateGoalFirestore from "../../Hooks/updateGoalFirestore";
-import addStepsGoal from "../../Hooks/addStepsGoal";
-import addSleepGoal from "../../Hooks/addSleepGoal";
+import updateGoalFirestore from "../../db/queries/goals/updateGoal";
+import addStepsGoal from "../../db/queries/goals/addStepsGoal";
+import addSleepGoal from "../../db/queries/goals/addSleepGoal";
 import { ActionCodeOperation } from "firebase/auth";
 
 const initialState: goalData = [
@@ -82,14 +82,11 @@ const goalSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder
-      .addCase(getAllGoals.pending, (state) => {})
-      .addCase(getAllGoals.fulfilled, (state, action) => {
-        let goals_data = action.payload;
-        state[0].data = goals_data[0].data;
-        state[1].data = goals_data[1].data;
-      })
-      .addCase(getAllGoals.rejected, (state, action) => {});
+    builder.addCase(getAllGoals.fulfilled, (state, action) => {
+      let goals_data = action.payload;
+      state[0].data = goals_data[0].data;
+      state[1].data = goals_data[1].data;
+    });
   },
 });
 

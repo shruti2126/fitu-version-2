@@ -1,9 +1,9 @@
 /** @format */
 
 import { doc, collection, addDoc, query } from "firebase/firestore";
-import { goalData, Goal } from "../types/GoalTypes";
+import { goalData, Goal } from "../../../types/GoalTypes";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import getFirestore from "../config/config";
+import getFirestore from "../../config/config";
 import { getObject } from "./asyncStorageHooks";
 
 const db = getFirestore;

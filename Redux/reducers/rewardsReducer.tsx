@@ -1,6 +1,6 @@
 /** @format */
 
-import updateRewards from "../../Hooks/updateRewards";
+import updateRewards from "../../db/queries/rewards/updateRewards";
 import { goalReward, Goal } from "../../types/GoalTypes";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { getRewards } from "../asyncThunkFirestoreQueries.tsx/getRewardsFromFirestore";

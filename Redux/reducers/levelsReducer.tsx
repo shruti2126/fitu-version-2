@@ -3,13 +3,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Goal } from "../../types/GoalTypes";
 import { level, levelRewards } from "../../types/LevelsType";
-import updateLevels from "../../Hooks/updateLevels";
+import updateLevels from "../../db/queries/rewards/updateLevels";
 
 const initialLevelsState: level = {
   currentLevel: 1,
   experienceToComplete: 5,
   levelRewards: {
-    coins: 1,
+    coins: 0,
     jewels: 0,
   },
 };
@@ -42,7 +42,7 @@ const levelSlice = createSlice({
           //if newLevel is NOT a multiple of 5, i.e. 1, 2, 3, 4,
           newRewards = {
             coins: 5,
-            jewels: Math.floor(state.currentLevel / 2), 
+            jewels: Math.floor(state.currentLevel / 2),
           };
         } else {
           // if newLevel === 5

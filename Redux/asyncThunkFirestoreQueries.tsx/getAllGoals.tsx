@@ -1,16 +1,12 @@
 /** @format */
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getObject } from "../../Hooks/asyncStorageHooks";
-import fetchSleepGoals from "../../Hooks/fetchSleepGoals";
-import fetchStepsGoals from "../../Hooks/fetchStepGoals";
+import fetchSleepGoals from "../../db/queries/goals/fetchSleepGoals";
+import fetchStepsGoals from "../../db/queries/goals/fetchStepGoals";
 import { Goal, goalData } from "../../types/GoalTypes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { goalDataConverter } from "../firestoreDataConverter";
-import { collectionGroup, onSnapshot, query } from "firebase/firestore";
-import { db } from "../../App";
+
 const auth = getAuth();
 let email: string = "";
 onAuthStateChanged(auth, (user) => {
@@ -47,6 +43,6 @@ export const getAllGoals = createAsyncThunk("goals/getGoals", async () => {
   sleepDocArr.forEach((sleepGoal) => {
     goalState[1].data.push(sleepGoal);
   });
-  console.log("Goal state = ", goalState)
+  console.log("Goal state = ", goalState);
   return goalState;
 });
