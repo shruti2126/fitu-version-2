@@ -2,40 +2,37 @@
 
 import React, { Dispatch, useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
-import { connect } from "react-redux";
-import * as actions from "../actions";
+
 import ItemCard from "../components/itemCard";
 import { StoreItem } from "../types/StoreTypes";
 import ShopBanner from "../components/ShopScreenBanner";
 import ShopComp1 from "../components/ShopComp1";
 import ShopComp2 from "../components/ShopComp2";
 import ShopComp4 from "../components/ShopComp4";
-import { useAppDispatch } from "../Hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../Hooks/reduxHooks";
 import { BUY_ITEM } from "../Redux/reducers/StoreReducer";
 import { DECREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
 import { ADD_ITEM } from "../Redux/reducers/inventoryReducer";
 
 type storeScreenProps = {
-  storeReducer: any;
-  rewardsReducer: any;
+  navigation: any
 };
 
-const StoreScreen: React.FC<storeScreenProps> = ({
-  storeReducer,
-  rewardsReducer,
-}) => {
+const StoreScreen: React.FC<storeScreenProps> = ({navigation}) => {
+  const store = useAppSelector(state => state.store);
+  const rewards = useAppSelector(state => state.rewards);
   const dispatch = useAppDispatch();
   const buyItem = (itemToBuy: StoreItem) => {
     if (
-      rewardsReducer.coins < itemToBuy.coins &&
-      rewardsReducer.jewels < itemToBuy.jewels
+      rewards.coins < itemToBuy.coins &&
+      rewards.jewels < itemToBuy.jewels
     ) {
       alert("Not enough coins and Jewels");
       return;
-    } else if (rewardsReducer.coins < itemToBuy.coins) {
+    } else if (rewards.coins < itemToBuy.coins) {
       alert("Not enough coins");
       return;
-    } else if (rewardsReducer.jewels < itemToBuy.jewels) {
+    } else if (rewards.jewels < itemToBuy.jewels) {
       alert("Not enough jewels");
       return;
     } else {
@@ -55,7 +52,7 @@ const StoreScreen: React.FC<storeScreenProps> = ({
       <ShopBanner />
       <ScrollView style={{ backgroundColor: "#F0FFFF" }}>
         <ShopComp1 />
-        <ShopComp2 navigation={undefined} />
+        <ShopComp2 navigation={navigation} />
       </ScrollView>
       <View style={{ backgroundColor: "#A7C7E7" }}>
         <ShopComp4 />
@@ -79,20 +76,20 @@ const StoreScreen: React.FC<storeScreenProps> = ({
                 },
               ]}
             >
-              Coins: {rewardsReducer.coins}
+              Coins: {rewards.coins}
             </Text>
             <Text style={styles.rewardsText}>
-              Jewels: {rewardsReducer.jewels}
+              Jewels: {rewards.jewels}
             </Text>
           </View>
         </View>
         <View style={{ backgroundColor: "#F0FFFF" }}>
           <FlatList
-            data={storeReducer}
+            data={store}
             renderItem={({ item }) => (
               <ItemCard item={item} BUY_ITEM={() => buyItem(item)} />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => `${item.id}`}
           />
         </View>
       </View>

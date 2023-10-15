@@ -35,7 +35,7 @@ const line = {
 	]
 };
 
-const StepDataCard: React.FC<dataProps> = ({}) => {
+const StepDataCard = () => {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Annual Steps</Text>

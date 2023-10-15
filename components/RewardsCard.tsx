@@ -1,18 +1,16 @@
 /** @format */
 
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, Button } from "react-native";
 
 
 type RewardsProps = {
   coins?: number;
   jewels?: number;
+  navigation: any
 };
 
-const rewardsCard: React.FC<RewardsProps> = ({ coins, jewels }) => {
-
-  const navigation = useNavigation();
+const rewardsCard: React.FC<RewardsProps> = ({ coins, jewels, navigation }) => {
 
   return (
     <View style={styles.container}>

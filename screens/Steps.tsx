@@ -1,11 +1,18 @@
 /** @format */
 
 import React from "react";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  SafeAreaView,
+  FlatList,
+  SectionList,
+} from "react-native";
 import StepCard from "../components/StepCard";
 import StepFacts from "../components/StepFacts";
 import StepDataCard from "../components/StepDataCard";
-import { Route, useNavigation } from "@react-navigation/native";
 import { Goal } from "../types/GoalTypes";
 
 type stepsProps = {
@@ -14,14 +21,20 @@ type stepsProps = {
 };
 
 const Steps: React.FC<stepsProps> = ({ route, navigation }) => {
-  const goals = route.params.goals;
+  const goals: Goal[] = route.params;
+
   return (
     <ImageBackground source={require("../nature.jpg")} style={styles.image}>
+      <Text style={styles.title}> Everything Steps </Text>
       <View style={styles.container}>
         <StepDataCard />
-        {goals.map((goal: Goal) => {
-          <StepCard goal={goal} />;
-        })}
+        <SafeAreaView>
+          <FlatList
+            data={goals}
+            renderItem={({ item }) => <StepCard goal={item} />}
+            keyExtractor={(item, index) => `${item.index}`}
+          />
+        </SafeAreaView>
         <StepFacts />
       </View>
     </ImageBackground>
@@ -39,6 +52,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     //blurRadius: 50
+  },
+  title: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 50,
+    textAlign: "center"
   },
 });
 

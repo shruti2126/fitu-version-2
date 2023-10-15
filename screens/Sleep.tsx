@@ -1,28 +1,41 @@
 /** @format */
 
 import React from "react";
-import { View, Text, StyleSheet, ImageBackground, Route } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Route,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
 import SleepCard from "../components/SleepCard";
 import SleepDataCard from "../components/SleepDataCard";
 import SleepFacts from "../components/SleepFacts";
-import { Goal } from "../types/GoalTypes";
+
 // import AnimatedBar from "react-native-animated-bar"
 
 type sleepProps = {
   route: any;
 };
 const Sleep: React.FC<sleepProps> = ({ route }) => {
-  const goals = route.params.goals;
+  const goals = route.params;
   return (
     <ImageBackground
       source={require("../assets/Better_sleep.png")}
       style={styles.image}
     >
+      <Text style={styles.title}> Everything Sleep </Text>{" "}
       <View style={styles.container}>
         <SleepDataCard />
-        {goals.map((goal: Goal) => {
-          <SleepCard goal={goal} />;
-        })}
+        <SafeAreaView>
+          <FlatList
+            data={goals}
+            renderItem={({ item }) => <SleepCard goal={item} />}
+            keyExtractor={(item, index) => `${item.index}`}
+          />
+        </SafeAreaView>
         <SleepFacts />
       </View>
     </ImageBackground>
@@ -38,6 +51,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     //blurRadius: 50
+  },
+  title: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 50,
+    textAlign: "center",
   },
 });
 export default Sleep;

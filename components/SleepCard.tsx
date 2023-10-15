@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 10,
   },
+  
 });
 
 // const mapStateToProps = (state: any) => {

@@ -9,18 +9,19 @@ import { useNavigation } from "@react-navigation/core";
 import { Button } from "react-native-elements";
 
 type cardProps = {
+  navigation: any;
   goals: Goal[];
-  card_title: string;
+  card_title: any;
 };
 
-const Card: React.FC<cardProps> = ({ goals, card_title }) => {
-  const [display, setDisplay] = useState("");
-
-  const navigation = useNavigation();
+const Card: React.FC<cardProps> = ({ navigation, goals, card_title }) => {
+  const [display, setDisplay] = useState<string>("");
+ 
   useEffect(() => {
-    goals.forEach((goal) => {
+    goals.forEach((goal: Goal) => {
       if (goal.isMainGoal) {
         setDisplay(goal.title);
+        console.log(display);
       } else {
         setDisplay("No Main Goals Yet");
       }
@@ -29,19 +30,17 @@ const Card: React.FC<cardProps> = ({ goals, card_title }) => {
 
   return (
     <View style={styles.frame}>
-      <View style={styles.header}>
-        <Text style={styles.heading}>Go to {card_title} Sector</Text>
-      </View>
-      <Button
+      <TouchableOpacity
         activeOpacity={0.6}
         onPress={() => navigation.navigate(card_title, goals)}
       >
         <View style={styles.container}>
-          <Text style={styles.title}>
-            Main Goal: <Text style={styles.text_title}>{display}</Text>
-          </Text>
+          <Text style={styles.heading}>Go to {card_title} Sector</Text>
         </View>
-      </Button>
+        {/* <View style={styles.container}>
+          <Text style={styles.title}>Main Goal: {display}</Text>
+        </View> */}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontWeight: "700",
-    color: "white",
+    color: "black",
     fontSize: 25,
   },
   frame: {

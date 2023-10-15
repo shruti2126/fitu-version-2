@@ -16,11 +16,14 @@ import Card from "../components/Card";
 import ProfileCard from "../components/ProfileCard";
 import RewardsCard from "../components/RewardsCard";
 import LevelsCard from "../components/LevelsCard";
-import { useAppSelector } from "../Hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../Hooks/reduxHooks";
 import Sleep from "./Sleep";
 import Steps from "./Steps";
 import { Goal, goalData, goalReward } from "../types/GoalTypes";
 import { level } from "../types/LevelsType";
+import { filterGoalsByType } from "../Hooks/filterGoalsByType";
+import { getAllGoalData } from "../Redux/reducers/goalReducer";
+import { getRewardsFromFirestore } from "../Redux/reducers/rewardsReducer";
 
 type homeScreenProps = {
   route: any;
@@ -35,14 +38,26 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
     });
   };
 
-  let steps_goals: Goal[] = useAppSelector(
-    (state) =>
-      state.goals.find((goal) => goal.title === "Daily Steps Goal")!.data
-  );
-  let sleep_goals: Goal[] = useAppSelector(
-    (state) =>
-      state.goals.find((goal) => goal.title === "Daily Sleep Goal")!.data
-  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getAllGoalData());
+    dispatch(getRewardsFromFirestore());
+  }, []);
+
+  let goalsData: goalData = useAppSelector((state) => state.goals);
+  function findByType(type: string): Goal[] {
+    let data = goalsData.find((goalType) => {
+      if (goalType.title === type) return goalType.data;
+    })?.data;
+    console.log(data);
+    if (data !== undefined) {
+      return data;
+    }
+    return [];
+  }
+  let steps_goals: Goal[] = findByType("Daily Steps Goal");
+  let sleep_goals: Goal[] = findByType("Daily Sleep Goal");
   let levels_data: level = useAppSelector((state) => state.levels);
   let rewards_data: goalReward = useAppSelector((state) => state.rewards);
 
@@ -65,20 +80,29 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
           <RewardsCard
             coins={rewards_data.coins}
             jewels={rewards_data.jewels}
+            navigation={navigation}
           />
-        </View>
-        <Card card_title={"Steps"} goals={steps_goals} />
-        <Card card_title={"Sleep"} goals={sleep_goals} />
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Stats")}
-          style={styles.StatsButton}
-        >
-          <Text style={styles.buttonText}>GO TO STATS</Text>
-        </TouchableOpacity>
+          <Card
+            card_title={"Steps"}
+            goals={steps_goals}
+            navigation={navigation}
+          />
+          <Card
+            card_title={"Sleep"}
+            goals={sleep_goals}
+            navigation={navigation}
+          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Stats")}
+            style={styles.StatsButton}
+          >
+            <Text style={styles.buttonText}>GO TO STATS</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={signOut} style={styles.button}>
-          <Text style={styles.buttonText}>Sign out</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={signOut} style={styles.button}>
+            <Text style={styles.buttonText}>Sign out</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </ImageBackground>
   );

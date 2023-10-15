@@ -1,9 +1,7 @@
 /** @format */
 
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
 import { Store, StoreItem } from "../../types/StoreTypes";
-import { useAppSelector } from "../../Hooks/reduxHooks";
 
 const initialStoreState: Store = [
   {
@@ -11,7 +9,7 @@ const initialStoreState: Store = [
     name: "Fresh Made Coffee",
     description:
       "Not only can your daily cup of joe help you feel more energized, it may also helps burn fat and improve physical performance",
-    coins: 10,
+    coins: 5,
     jewels: 0,
     isBought: false,
     isActive: false,
@@ -86,7 +84,8 @@ const storeSlice = createSlice({
         (item) => item.id === action.payload.id
       )!;
       boughtItem.isBought = true;
-      state.filter((item) => item.id !== action.payload.id);
+      console.log("bought Item = ", boughtItem);
+      state.filter((item) => item.id !== action.payload.id); //remove bought item from store listing
     },
   },
 });

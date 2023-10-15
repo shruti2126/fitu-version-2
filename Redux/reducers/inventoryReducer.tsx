@@ -3,7 +3,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Inventory } from "../../types/InventoryTypes";
 import { StoreItem } from "../../types/StoreTypes";
-import { useAppSelector } from "../../Hooks/reduxHooks";
 
 const initialInventoryState: Inventory = [];
 
@@ -12,7 +11,7 @@ const inventorySlice = createSlice({
   initialState: initialInventoryState,
   reducers: {
     ADD_ITEM: (state, action: PayloadAction<StoreItem>) => {
-      state.push(action.payload);
+      state = [...state, action.payload];
     },
   },
 });
