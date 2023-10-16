@@ -1,11 +1,7 @@
 /** @format */
 
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Goal } from "../../../types/GoalTypes";
 import { getAuth } from "@firebase/auth";
 import getFirestore from "../../config/config";
-import { doc, getDoc } from "@firebase/firestore";
 import {
   collection,
   collectionGroup,

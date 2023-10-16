@@ -28,6 +28,7 @@ const rewardsSlice = createSlice({
     DECREASE_REWARDS: (state, action: PayloadAction<goalReward>) => {
       state.coins -= action.payload.coins;
       state.jewels -= action.payload.jewels;
+      console.log("decreasing rewards = ", state.coins,  " , ", state.jewels)
       updateRewards({ ...state });
     },
   },

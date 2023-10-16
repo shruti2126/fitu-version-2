@@ -12,6 +12,7 @@ import { db } from "../../../App";
 import { StoreItem } from "../../../types/StoreTypes";
 
 const deleteStoreItem = async (item: StoreItem) => {
+  console.log("deleting store item = ", item)
   const subcollectionRef = collectionGroup(db, "Inventory");
   const queryDocs = query(subcollectionRef, where("id", "==", item.id));
   const querySnapshot = await getDocs(queryDocs);

@@ -19,11 +19,17 @@ type storeScreenProps = {
 };
 
 const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
-  console.log("store in route.params = ", route.params)
-  const { store, rewards } = route.params;
-  
+  let rewards = route.params;
+  let storeState = useAppSelector((state) => state.store);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchStore());
+  }, []);
+
+  let storeData = storeState.data;
   const buyItem = (itemToBuy: StoreItem) => {
+    console.log("am I being called?");
     if (rewards.coins < itemToBuy.coins && rewards.jewels < itemToBuy.jewels) {
       alert("Not enough coins and Jewels");
       return;
@@ -34,6 +40,7 @@ const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
       alert("Not enough jewels");
       return;
     } else {
+      ("dispatching buy item action...");
       dispatch(BUY_ITEM(itemToBuy));
       dispatch(
         DECREASE_REWARDS({
@@ -41,56 +48,64 @@ const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
           jewels: itemToBuy.jewels,
         })
       );
-      ADD_ITEM(itemToBuy);
+      // ADD_ITEM(itemToBuy);
     }
   };
 
-  return (
-    <>
-      <ShopBanner />
-      <ScrollView style={{ backgroundColor: "#F0FFFF" }}>
-        <ShopComp1 />
-        <ShopComp2 navigation={navigation} />
-      </ScrollView>
-      <View style={{ backgroundColor: "#A7C7E7" }}>
-        <ShopComp4 />
-      </View>
-      {/* separate */}
+  if (storeState.loading) {
+    return (
       <View>
-        <View style={styles.bannerContainer}>
-          <Text style={styles.bannerTitle}> ✧ Our Collections ✧</Text>
+        <Text>Loading...</Text>
+      </View>
+    );
+  } else {
+    return (
+      <>
+        <ShopBanner />
+        <ScrollView style={{ backgroundColor: "#F0FFFF" }}>
+          <ShopComp1 />
+          <ShopComp2 navigation={navigation} />
+        </ScrollView>
+        <View style={{ backgroundColor: "#A7C7E7" }}>
+          <ShopComp4 />
         </View>
-        <View style={{ marginLeft: 10, marginRight: 10 }}>
-          <Text style={styles.storeHeader} />
+        {/* separate */}
+        <View>
+          <View style={styles.bannerContainer}>
+            <Text style={styles.bannerTitle}> ✧ Our Collections ✧</Text>
+          </View>
+          <View style={{ marginLeft: 10, marginRight: 10 }}>
+            <Text style={styles.storeHeader} />
 
-          <View style={styles.rewards}>
-            <Text
-              style={[
-                styles.rewardsText,
-                {
-                  // borderRigWidth: 1,
-                  borderRightWidth: 1,
-                  borderRightColor: "#CFCFCF",
-                },
-              ]}
-            >
-              Coins: {rewards.coins}
-            </Text>
-            <Text style={styles.rewardsText}>Jewels: {rewards.jewels}</Text>
+            <View style={styles.rewards}>
+              <Text
+                style={[
+                  styles.rewardsText,
+                  {
+                    // borderRigWidth: 1,
+                    borderRightWidth: 1,
+                    borderRightColor: "#CFCFCF",
+                  },
+                ]}
+              >
+                Coins: {rewards.coins}
+              </Text>
+              <Text style={styles.rewardsText}>Jewels: {rewards.jewels}</Text>
+            </View>
+          </View>
+          <View style={{ backgroundColor: "#F0FFFF" }}>
+            <FlatList
+              data={storeData}
+              renderItem={({ item }) => (
+                <ItemCard item={item} BUY_ITEM={() => buyItem(item)} />
+              )}
+              keyExtractor={(item, index) => `${item.id}`}
+            />
           </View>
         </View>
-        <View style={{ backgroundColor: "#F0FFFF" }}>
-          <FlatList
-            data={store}
-            renderItem={({ item }) => (
-              <ItemCard item={item} BUY_ITEM={() => buyItem(item)} />
-            )}
-            keyExtractor={(item) => `${item.id}`}
-          />
-        </View>
-      </View>
-    </>
-  );
+      </>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

@@ -3,18 +3,18 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { Store } from "../types/StoreTypes";
+import { useAppSelector } from "../Hooks/reduxHooks";
 
 
 type RewardsProps = {
-  store: Store
   coins?: number;
   jewels?: number;
   navigation: any
 };
 
-const rewardsCard: React.FC<RewardsProps> = ({ store, coins, jewels, navigation }) => {
-  console.log('is store data coming into Rewards Card = ', store);
-  let rewards = {coins: coins, jewels: jewels}
+const rewardsCard: React.FC<RewardsProps> = ({ coins, jewels, navigation }) => {
+  
+  let rewards = useAppSelector(state => state.rewards)
   return (
     <View style={styles.container}>
       <Text style={styles.textTitle}>Rewards</Text>
@@ -24,7 +24,7 @@ const rewardsCard: React.FC<RewardsProps> = ({ store, coins, jewels, navigation 
       <View style={styles.storeButton}>
         <Button
           title="Visit Store"
-          onPress={() => navigation.navigate("Store", { store, rewards })}
+          onPress={() => navigation.navigate("Store",  rewards)}
           color="##e1ad01"
         />
         {/* <Button title="Visit Store" onPress={() => navigation.navigate('Shop')} color="#f194ff" /> */}

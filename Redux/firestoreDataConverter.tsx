@@ -42,6 +42,7 @@ export const storeDataConverter = {
       };
       itemArr.push(item);
     })
+    console.log("itemArr = ", itemArr)
     return itemArr;
   },
 };

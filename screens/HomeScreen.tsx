@@ -46,7 +46,6 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
   useEffect(() => {
     dispatch(getAllGoalData());
     dispatch(getRewardsFromFirestore());
-    dispatch(fetchStore());
   }, []);
 
   let goalsData: goalData = useAppSelector((state) => state.goals);
@@ -65,63 +64,52 @@ const HomeScreen: React.FC<homeScreenProps> = ({ route, navigation }) => {
   let sleep_goals: Goal[] = findByType("Daily Sleep Goal");
   let levels_data: level = useAppSelector((state) => state.levels);
   let rewards_data: goalReward = useAppSelector((state) => state.rewards);
-  let store_data: storeState = useAppSelector((state) => state.store);
-
-  if (store_data.loading) {
-    dispatch(fetchStore());
-    return (
-      <View>
-        <Text> Loading ... </Text>
-      </View>
-    );
-  } else {
-    return (
-      <ImageBackground
-        source={require("../LoginBackground.jpeg")}
-        style={styles.image}
-      >
-        <ScrollView>
-          <View style={[styles.container, styles.shadow]}>
-            <View style={styles.title_header}>
-              <Text style={styles.title}>Welcome {route.params} !</Text>
-            </View>
-
-            <ProfileCard />
-            <LevelsCard
-              currentLevel={levels_data.currentLevel}
-              experienceToComplete={levels_data.experienceToComplete}
-            />
-            <RewardsCard
-              store={store_data.data}
-              coins={rewards_data.coins}
-              jewels={rewards_data.jewels}
-              navigation={navigation}
-            />
-            <Card
-              card_title={"Steps"}
-              goals={steps_goals}
-              navigation={navigation}
-            />
-            <Card
-              card_title={"Sleep"}
-              goals={sleep_goals}
-              navigation={navigation}
-            />
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Stats")}
-              style={styles.StatsButton}
-            >
-              <Text style={styles.buttonText}>GO TO STATS</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={signOut} style={styles.button}>
-              <Text style={styles.buttonText}>Sign out</Text>
-            </TouchableOpacity>
+  
+  return (
+    <ImageBackground
+      source={require("../LoginBackground.jpeg")}
+      style={styles.image}
+    >
+      <ScrollView>
+        <View style={[styles.container, styles.shadow]}>
+          <View style={styles.title_header}>
+            <Text style={styles.title}>Welcome {route.params} !</Text>
           </View>
-        </ScrollView>
-      </ImageBackground>
-    );
-  }
+
+          <ProfileCard />
+          <LevelsCard
+            currentLevel={levels_data.currentLevel}
+            experienceToComplete={levels_data.experienceToComplete}
+          />
+          <RewardsCard
+            coins={rewards_data.coins}
+            jewels={rewards_data.jewels}
+            navigation={navigation}
+          />
+          <Card
+            card_title={"Steps"}
+            goals={steps_goals}
+            navigation={navigation}
+          />
+          <Card
+            card_title={"Sleep"}
+            goals={sleep_goals}
+            navigation={navigation}
+          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Stats")}
+            style={styles.StatsButton}
+          >
+            <Text style={styles.buttonText}>GO TO STATS</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={signOut} style={styles.button}>
+            <Text style={styles.buttonText}>Sign out</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </ImageBackground>
+  );
 };
 
 export default HomeScreen;

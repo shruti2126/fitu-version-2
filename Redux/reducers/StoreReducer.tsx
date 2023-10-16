@@ -4,7 +4,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Store, StoreItem } from "../../types/StoreTypes";
 import deleteStoreItem from "../../db/queries/store/deleteStoreItem";
 import addStoreItem from "../../db/queries/store/addStoreItem";
-import getStoreItems from "../asyncThunkFirestoreQueries.tsx/getStoreItems";
+import {getStoreItems} from "../asyncThunkFirestoreQueries.tsx/getStoreItems";
 
 const initialStoreState: Store = [];
 
@@ -17,13 +17,14 @@ const storeSlice = createSlice({
   },
   reducers: {
     BUY_ITEM: (state, action: PayloadAction<StoreItem>) => {
-      let boughtItem: StoreItem = state.data.find(
-        (item) => item.id === action.payload.id
-      )!;
-      boughtItem.isBought = true;
-      console.log("bought Item = ", boughtItem);
-      state.data.filter((item) => item.id !== action.payload.id); //remove bought item from store listing
-      deleteStoreItem(boughtItem);
+       const itemIndex = state.data.findIndex(
+         (item) => item.id === action.payload.id
+       );
+       if (itemIndex !== -1) {
+         state.data = state.data.filter((item, index) => index !== itemIndex);
+         console.log("store state after deleting item from list = ", state.data)
+         deleteStoreItem(action.payload);
+       }
     },
     ADD_ITEM: (state, action: PayloadAction<StoreItem>) => {
       state.data = [...state.data, action.payload];
@@ -31,13 +32,12 @@ const storeSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(fetchStore.fulfilled, (state, action) => {
+    builder.addCase(getStoreItems.fulfilled, (state, action) => {
       state.loading = false;
       let newStoreState: Store = action.payload;
-      state.data = state.data.concat(newStoreState);
-      console.log("store state after fetching inventory = ", state);
+      state.data = [...state.data, ...newStoreState];
     });
-    builder.addCase(fetchStore.pending, (state) => {
+    builder.addCase(getStoreItems.pending, (state) => {
       state.loading = true; // Set loading to true when the fetchStore thunk is pending
     });
   },
