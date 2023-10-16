@@ -44,7 +44,7 @@ const updateGoalFirestore = async (goal: Goal, isSteps: boolean) => {
   }
 
   const q = query(
-    collectionGroup(db, subcollection),
+    collection(db, collectionName, email, subcollection),
     where("index", "==", goal.index)
   );
   const querySnapshot = await getDocs(q);

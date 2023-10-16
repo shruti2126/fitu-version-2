@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+  collection,
   collectionGroup,
   getDocs,
   query,
@@ -9,9 +10,15 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../App";
 import { StoreItem } from "../../../types/StoreTypes";
+import { getAuth } from "firebase/auth";
 
 const updateStoreItem = async (item: StoreItem) => {
-  const subcollectionRef = collectionGroup(db, "Inventory");
+  const subcollectionRef = collection(
+    db,
+    "store",
+    getAuth().currentUser?.email!,
+    "Inventory"
+  );
   const queryDocs = query(subcollectionRef, where("id", "==", item.id));
   const querySnapshot = await getDocs(queryDocs);
   try {

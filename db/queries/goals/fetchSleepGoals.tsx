@@ -14,9 +14,9 @@ const db = getFirestore;
 let auth = getAuth();
 
 const fetchSleepGoals = async (email: string) => {
-  const q = query(collectionGroup(db, "daily sleep goals"));
+  const collectionRef = collection(db, "sleep_goals", email, "daily sleep gaols")
+  const q = query(collectionRef);
   const snapshot = await getDocs(q);
-
   return snapshot;
 };
 

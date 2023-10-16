@@ -57,7 +57,7 @@ const LoginScreen: React.FC<loginScreenProps> = ({ navigation }) => {
         setEmail(userCredential.user.email!);
       })
       .catch((error) => {
-        alert(error.message);
+        setMessage("Invalid Email or Password! Please try again!");
       });
   };
 
@@ -166,10 +166,11 @@ const styles = StyleSheet.create({
     color: "white",
   },
   message: {
-    fontSize: 15,
+    fontSize: 30,
     color: "red",
     marginTop: 10,
     marginBottom: 10,
+    textAlign: "center",
   },
   titleContainer: {
     width: "60%",

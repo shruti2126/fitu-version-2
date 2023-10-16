@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+  collection,
   collectionGroup,
   deleteDoc,
   getDocs,
@@ -10,10 +11,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../App";
 import { StoreItem } from "../../../types/StoreTypes";
+import { getAuth } from "firebase/auth";
 
 const deleteStoreItem = async (item: StoreItem) => {
   console.log("deleting store item = ", item)
-  const subcollectionRef = collectionGroup(db, "Inventory");
+  const subcollectionRef = collection(db, "store", getAuth().currentUser?.email!, "Inventory");
   const queryDocs = query(subcollectionRef, where("id", "==", item.id));
   const querySnapshot = await getDocs(queryDocs);
   try {

@@ -1,7 +1,7 @@
 /** @format */
 
 ;
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import getFirestore from "../db/config/config";
 import addMultipleItems from "../db/queries/store/addMultipleItems";
 import { Store } from "../types/StoreTypes";
@@ -89,12 +89,7 @@ const initialStoreState: Store = [
 ];
 
 export async function initializeDocsInFirestore(email: string) {
-  // await setDoc(doc(db, "sleep_goals", email.toLocaleLowerCase()), {
-  //   goals: [],
-  // });
-  // await setDoc(doc(db, "steps_goals", email.toLocaleLowerCase()), {
-  //   goals: [],
-  // });
+
   await setDoc(doc(db, "rewards", email.toLocaleLowerCase()), {
     coins: 0,
     jewels: 0,
@@ -107,6 +102,5 @@ export async function initializeDocsInFirestore(email: string) {
       jewels: 0,
     },
   });
-  
   await addMultipleItems(initialStoreState, email);
 }

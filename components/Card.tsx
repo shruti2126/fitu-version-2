@@ -2,11 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
-
-import { Goal, goalData } from "../types/GoalTypes";
-import { getUserFromAsyncStorage } from "../Hooks/getUserFromAsynStorage";
-import { useNavigation } from "@react-navigation/core";
-import { Button } from "react-native-elements";
+import { Goal } from "../types/GoalTypes";
 
 type cardProps = {
   navigation: any;

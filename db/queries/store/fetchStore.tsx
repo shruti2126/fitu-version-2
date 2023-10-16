@@ -1,12 +1,13 @@
 /** @format */
 
 import { db } from "../../../App";
-import { collectionGroup, getDocs, getDocsFromServer, query } from "firebase/firestore";
+import { collection, collectionGroup, getDocs, getDocsFromServer, query } from "firebase/firestore";
 import { storeDataConverter } from "../../../Redux/firestoreDataConverter";
 import { Store, StoreItem } from "../../../types/StoreTypes";
+import { getAuth } from "firebase/auth";
 
 const fetchStore = async () => {
-  const q = query(collectionGroup(db, "Inventory"));
+  const q = query(collection(db, "store", getAuth().currentUser?.email!, "Inventory"));
   const snapshot = await getDocsFromServer(q);
   let items : StoreItem[] = []
   snapshot.docs.forEach(doc => {

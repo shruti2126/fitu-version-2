@@ -18,9 +18,10 @@ const db = getFirestore;
 let auth = getAuth();
 
 const fetchStepsGoals = async (email: string) => {
-  const q = query(collectionGroup(db, "daily steps goals"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot;
+const collectionRef = collection(db, "steps_goals", email, "daily steps goals");
+const q = query(collectionRef);
+const snapshot = await getDocs(q);
+return snapshot;
 };
 
 export default fetchStepsGoals;

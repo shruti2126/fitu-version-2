@@ -47,7 +47,7 @@ export default async function deleteGoalFromFirestore(goal: Goal) {
   }
 
   const q = query(
-    collectionGroup(db, subcollection),
+    collection(db, collectionName, email, subcollection),
     where("index", "==", goal.index)
   );
   const qSnap = await getDocs(q);

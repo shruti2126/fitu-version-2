@@ -59,7 +59,8 @@ const RegisterScreen: React.FC<registerScreenProps> = ({ navigation }) => {
         setUsername("");
       })
       .catch((error) => {
-        alert(error.message);
+        setMessage(error.message);
+        // alert(error.message);
       });
   };
   //const image = {uri: "https://i.stack.imgur.com/cEz3G.jpg"};
@@ -95,6 +96,9 @@ const RegisterScreen: React.FC<registerScreenProps> = ({ navigation }) => {
             secureTextEntry={true}
           />
         </View>
+        <Text style={{ color: "red", fontSize: 20, textAlign: "center" }}>
+          {message}
+        </Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={signUp}

@@ -53,7 +53,7 @@ const Goals = () => {
   });
   const dispatch = useAppDispatch();
   let goalsData: goalData = useAppSelector((state) => state.goals);
-  let rewardsData: goalReward = useAppSelector((state) => state.rewards);
+  
   useEffect(() => {
     dispatch(getAllGoalData());
   }, []);

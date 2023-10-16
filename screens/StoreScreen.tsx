@@ -12,6 +12,7 @@ import ShopComp4 from "../components/ShopComp4";
 import { useAppDispatch, useAppSelector } from "../Hooks/reduxHooks";
 import { BUY_ITEM, ADD_ITEM, fetchStore } from "../Redux/reducers/StoreReducer";
 import { DECREASE_REWARDS } from "../Redux/reducers/rewardsReducer";
+import { store } from "../Redux/store";
 
 type storeScreenProps = {
   route: any;
@@ -20,24 +21,20 @@ type storeScreenProps = {
 
 const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
   let rewards = route.params;
-  let storeState = useAppSelector((state) => state.store);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchStore());
-  }, []);
-
-  let storeData = storeState.data;
+  let storeState = useAppSelector((state) => state.store);
+  const [err, setErr] = useState<string>("")
   const buyItem = (itemToBuy: StoreItem) => {
     console.log("am I being called?");
     if (rewards.coins < itemToBuy.coins && rewards.jewels < itemToBuy.jewels) {
-      alert("Not enough coins and Jewels");
+      // alert("Not enough coins and Jewels");
+      setErr("Not enough coins or Jewels!")
       return;
     } else if (rewards.coins < itemToBuy.coins) {
-      alert("Not enough coins");
+      setErr("Not enough coins");
       return;
     } else if (rewards.jewels < itemToBuy.jewels) {
-      alert("Not enough jewels");
+      setErr("Not enough jewels");
       return;
     } else {
       ("dispatching buy item action...");
@@ -52,13 +49,7 @@ const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
     }
   };
 
-  if (storeState.loading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  } else {
+
     return (
       <>
         <ShopBanner />
@@ -93,9 +84,10 @@ const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
               <Text style={styles.rewardsText}>Jewels: {rewards.jewels}</Text>
             </View>
           </View>
+          <Text style={styles.message}>{err}</Text>
           <View style={{ backgroundColor: "#F0FFFF" }}>
             <FlatList
-              data={storeData}
+              data={storeState.data}
               renderItem={({ item }) => (
                 <ItemCard item={item} BUY_ITEM={() => buyItem(item)} />
               )}
@@ -105,7 +97,6 @@ const StoreScreen: React.FC<storeScreenProps> = ({ route, navigation }) => {
         </View>
       </>
     );
-  }
 };
 
 const styles = StyleSheet.create({
@@ -143,6 +134,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#CFCFCF",
     paddingBottom: 5,
+  },
+  message: {
+    fontSize: 25,
+    color: "Brown",
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: "center",
+    backgroundColor: "yellow"
   },
   rewardsText: {
     flex: 1,

@@ -22,6 +22,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 export const getAllGoals = createAsyncThunk("goals/getGoals", async () => {
+  console.log("user email = ", email);
   const sleep = await fetchSleepGoals(email);
   const steps = await fetchStepsGoals(email);
   const goalState: goalData = [

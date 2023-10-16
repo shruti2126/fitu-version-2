@@ -3,9 +3,9 @@
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../App";
 import { getAuth } from "firebase/auth";
-import { StoreItem } from "../../../types/StoreTypes";
+import { Store, StoreItem } from "../../../types/StoreTypes";
 
-const addMultipleItems = async (items: StoreItem[], email?: string) => {
+const addMultipleItems = async (items: Store, email?: string) => {
 	console.log("adding multiple items...")
   if (email === undefined) {
     email = getAuth().currentUser?.email!;
